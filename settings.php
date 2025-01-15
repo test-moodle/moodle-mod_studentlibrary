@@ -1,11 +1,27 @@
 <?php
 
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * Plugin administration pages are defined here.
  *
  * @package     mod_studentlibrary
  * @category    admin
- * @copyright   2020 itsup.biz
+ * @copyright   2025 <plagin@geotar.ru>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -38,38 +54,4 @@ if ($ADMIN->fulltree) {
                '0000'
           )
      );
-     // Сервет КС не нужен так как получаем готовую ссылку на книгу
-     // $settings->add(
-     //      new admin_setting_configtext(
-     //           'studentlibrary_server',
-     //           get_string('studentlibrary:server', 'mod_studentlibrary'),
-     //           get_string('studentlibrary:server_desc', 'mod_studentlibrary'),
-     //           'https://www.studentlibrary.ru/'
-     //      )
-     // );
-
-     // $settings->add(
-     //      new admin_setting_configtext(
-     //           'studentlibrary_serverapi',
-     //           get_string('studentlibrary:serverapi', 'mod_studentlibrary'),
-     //           get_string('studentlibrary:serverapi_desc', 'mod_studentlibrary'),
-     //           'http://gate22.studentlibrary.ru/'
-     //      )
-     // );
-     
-     // $settings->add(
-     //      new  admin_setting_description(
-     //           'studentlibrarylink',
-     //           'Список доступных книг',
-     //           '<a href="/mod/studentlibrary/book.php">просмотреть</a>'
-     //      )
-     // );
-     // $item = new  admin_setting_configstoredfile(
-     //      'studentlibraryfile',
-     //      'Загрузить новый список доступных книг',
-     //      'используйте для загрузки нового списка',
-     //      'ebslist'
-     // );
-     // $item->set_updatedcallback('studentlibrary_file');
-     // $settings->add($item);
 }
