@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -16,19 +15,25 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin administration pages are defined here.
+ * Upgrade steps for the plugintype_pluginname plugin.
  *
- * @package     mod_studentlibrary
- * @category    admin
- * @copyright   2025 <plagin@geotar.ru>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   plugintype_pluginname
+ * @copyright 2025 shekhovtcev <plagin@geotar.ru>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+function xmldb_mod_studentlibrary_upgrade($oldversion): bool {
+    global $CFG, $DB;
 
-defined('MOODLE_INTERNAL') || die();
+    $dbman = $DB->get_manager(); // Loads ddl manager and xmldb classes.
 
-$plugin->component = 'mod_studentlibrary';
-$plugin->release = '1.0.2025011500';
-$plugin->version  = 2025011500;
-$plugin->requires = 2019111800;
-$plugin->maturity = MATURITY_RC;
-$plugin->serverapi = 'https://gate22.studentlibrary.ru/';
+    // if ($oldversion < 2019031200) {
+        // Perform the upgrade from version 2019031200 to the next version.
+    // }
+
+    // if ($oldversion < 2019031201) {
+        // Perform the upgrade from version 2019031201 to the next version.
+    // }
+
+    // Everything has succeeded to here. Return true.
+    return true;
+}

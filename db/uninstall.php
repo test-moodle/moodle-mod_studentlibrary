@@ -19,7 +19,7 @@
  * Plugin administration pages are defined here.
  *
  * @package     mod_studentlibrary
- * @category    admin
+ * @category    shekhovtcev
  * @copyright   2025 <plagin@geotar.ru>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
