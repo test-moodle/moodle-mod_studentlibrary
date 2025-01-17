@@ -21,7 +21,7 @@
  * @copyright 2025 shekhovtcev <plagin@geotar.ru>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-function xmldb_mod_studentlibrary_upgrade($oldversion): bool {
+function xmldb_studentlibrary_upgrade($oldversion): bool {
     global $CFG, $DB;
 
     $dbman = $DB->get_manager(); // Loads ddl manager and xmldb classes.
