@@ -42,14 +42,16 @@ function get_lib_url($book)
 	$org_id = $DB->get_record('config', array('name' => 'studentlibrary_idorg'))->value;
 	$agr_id = $DB->get_record('config', array('name' => 'studentlibrary_norg'))->value;
 	$server = $DB->get_record('config', array('name' => 'studentlibrary_server'))->value;
-	// $wwwroot = $CFG->wwwroot;
 	if (substr($server, -1) !== '/') {
 		$server = $server . '/';
 	}
 	if (substr($serverapi, -1) !== '/') {
 		$serverapi = $serverapi . '/';
 	}
-	/*  Получаем сессию организации*/
+    /**
+     * Получаем сессию организации
+     * We get the organization's session
+     */
 	$SSr_O = getSSr_O($serverapi, $org_id, $agr_id);
 	$url = $PAGE->url;
 	$scheme = $url->get_scheme();
@@ -61,8 +63,10 @@ function get_lib_url($book)
 	} else {
 		$url_api = $scheme . '://' . $host . '/mod/studentlibrary/set_grade.php';
 	}
-	
-	/* Генерируем apikey */
+	/**
+	 * Генерируем apikey
+	 * Generating an apikey
+	 */
 	$userid = $USER->id;
 	$courseid = $PAGE->course->id;
 	$moduleid = required_param('id', PARAM_INT);
@@ -74,18 +78,31 @@ function get_lib_url($book)
 	$result->user = $userid;
 	$result->timecreated = $timecreated;
 	$result->apikey = $apikey;
-	$unix_day = 86400; /* Секунд в дне */
-	/* Удаление старых записей */
+	/**
+	 * Секунд в дне
+	 * Seconds per day
+	 */
+	$unix_day = 86400;
+	/**
+	 * Удаление старых записей
+	 * Deleting old records
+	 */
 	if ($DB->record_exists('studentlibrary_apikey', array('course' => $courseid, 'module' => $moduleid, 'user' => $userid))) {
 		$table = 'studentlibrary_apikey';
 		$select = 'course = :course AND module = :module AND user = :user AND timecreated < :timecreated';
 		$param = array('course' => $courseid, 'module' => $moduleid, 'user' => $userid, 'timecreated' => ($timecreated - $unix_day));
 		$DB->delete_records_select($table, $select, $param);
 	}
-	/*  Получаем сессию пользователя */
+    /**
+     * Получаем сессию пользователя
+     * Getting the user's session
+     */
 	$SSr_P = getSSr_P($serverapi, $SSr_O, $USER->id, str_replace(' ', '_', $USER->lastname), str_replace(' ', '_', $USER->firstname));
 	if (strtolower(explode("/", $book)[0]) === 'switch_kit') {
-		/* Получаем ссылку на Комплект */
+		/**
+		 * Получаем ссылку на Комплект
+		 * We get a link to the Kit
+		 */
 		$getAccesURL = '';
 		$book_id = explode("/", $book)[1];
 		$getAccesURL = $serverapi . "db";
@@ -103,7 +120,11 @@ function get_lib_url($book)
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($ch, CURLOPT_URL, $getAccesURL);
-			$RezXML = curl_exec($ch); /* Получаем сессию*/
+			/**
+			 * Получаем сессию
+			 * We get a session
+			 */
+			$RezXML = curl_exec($ch);
 			curl_close($ch);
 			$xml = simplexml_load_string($RezXML);
 			$json = json_encode($xml);
@@ -111,7 +132,10 @@ function get_lib_url($book)
 			$book_item = BuildSwitchKit($serverapi, $SSr_O, $book_id, $array["url"], $lang);
 		}
 	} else {
-		/*  Получаем ссылку на книгу */
+		/**
+		 * Получаем ссылку на книгу
+		 * We get a link to the book
+		 */
 		$getAccesURL = '';
 		$book_id = explode("/", $book)[1];
 		for ($i = 2; $i < count(explode("/", $book)); $i++) {
@@ -176,25 +200,26 @@ function BuildBook($server, $ssr, $BookID,  $url)
 		$book_id = GetBookIdbyDocId($server, $ssr, explode("/", $BookID)[1]);
 		$getSesionURL = $server . 'db?SSr=' . $ssr . '&guide=book&cmd=data&id=' . $book_id . '&img_src_form=b64&on_cdata=1';
 	}
-	// print_r( $getSesionURL);
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($ch, CURLOPT_URL, $getSesionURL);
-	$SSrXML = curl_exec($ch); /* Получаем сессию*/
+	/**
+	 * Получаем сессию
+	 * We get a session
+	 */
+	$SSrXML = curl_exec($ch);
 	curl_close($ch);
 	$xml = simplexml_load_string($SSrXML, null, LIBXML_NOCDATA);
 	$json = json_encode($xml);
 	$array = json_decode($json, TRUE);
 	$meta_var = $array['meta']['var'];
 	$chapters = $array['chapters']['chapter'];
-	// print_r($chapters);
 	$authors = '';
 	$annotation = '';
 	$publisher = '';
 	$year = '';
 	for ($i = 0; $i < count($meta_var); $i++) {
 		if ($meta_var[$i]['@attributes']['name'] === 'authors') {
-			// $authors = $meta_var[$i]['string'];
 			if ($xml->xpath('/book/meta/var[@name="authors"]/string[@language="' . $SESSION->lang . '"]')) {
 				$authors = $xml->xpath('/book/meta/var[@name="authors"]/string[@language="' . $SESSION->lang . '"]')[0];
 			} else if ($xml->xpath('/book/meta/var[@name="authors"]/string[@language="ru"]')) {
@@ -204,7 +229,6 @@ function BuildBook($server, $ssr, $BookID,  $url)
 			}
 		}
 		if ($meta_var[$i]['@attributes']['name'] === 'annotation') {
-			// $annotation = $meta_var[$i]['string'];
 			if ($xml->xpath('/book/meta/var[@name="annotation"]/string[@language="' . $SESSION->lang . '"]')) {
 				$annotation = $xml->xpath('/book/meta/var[@name="annotation"]/string[@language="' . $SESSION->lang . '"]')[0];
 			} else if ($xml->xpath('/book/meta/var[@name="annotation"]/string[@language="ru"]')) {
@@ -214,7 +238,6 @@ function BuildBook($server, $ssr, $BookID,  $url)
 			}
 		}
 		if ($meta_var[$i]['@attributes']['name'] === 'year') {
-			// $year = $meta_var[$i]['string'];
 			if ($xml->xpath('/book/meta/var[@name="year"]/string[@language="' . $SESSION->lang . '"]')) {
 				$year = $xml->xpath('/book/meta/var[@name="year"]/string[@language="' . $SESSION->lang . '"]')[0];
 			} else if ($xml->xpath('/book/meta/var[@name="year"]/string[@language="ru"]')) {
@@ -224,7 +247,6 @@ function BuildBook($server, $ssr, $BookID,  $url)
 			}
 		}
 		if ($meta_var[$i]['@attributes']['name'] === 'publisher') {
-			// $publisher = $meta_var[$i]['string'];
 			if ($xml->xpath('/book/meta/var[@name="publisher"]/string[@language="' . $SESSION->lang . '"]')) {
 				$publisher = $xml->xpath('/book/meta/var[@name="publisher"]/string[@language="' . $SESSION->lang . '"]')[0];
 			} else if ($xml->xpath('/book/meta/var[@name="publisher"]/string[@language="ru"]')) {
@@ -254,7 +276,6 @@ function BuildBook($server, $ssr, $BookID,  $url)
 	$book_list_item = '';
 	$book_list_item .= '<label class="radio-card">';
 	$book_list_item .= '<div class="card-content-detail-wrapper">';
-	// $book_list_item .= '<div class="titleH1">' . $array['title']['string'] . '</div>';
 	if ($xml->xpath('/book/title/string[@language="' . $SESSION->lang . '"]')) {
 		$book_list_item .= '<div class="titleH1">' . $xml->xpath('/book/title/string[@language="' . $SESSION->lang . '"]')[0] . '</div>';
 	} else if ($xml->xpath('/book/title/string[@language="ru"]')) {
@@ -279,17 +300,13 @@ function BuildBook($server, $ssr, $BookID,  $url)
 	$book_list_item .= '</div>';
 	$book_list_item .= '<div class="annotation"><p class="annotation_title">' . get_string('studentlibrary:annotation', 'mod_studentlibrary') . ':</p>';
 	if ($annotation) {
-		// var_dump($annotation);
 		if (isset($annotation['p'])) {
-			// print_r('p');
 			for ($p = 0; $p < count($annotation['p']); $p++) {
 				$book_list_item .= '<p>' . $annotation['p'][$p] . '</p>';
 			}
 		} elseif (isset($annotation['div'])) {
-			// print_r('div');
 			$book_list_item .= '<div>' . $annotation['div'] . '</div>';
 		} else {
-			// print_r('else');
 			$book_list_item .= '<div>' . $annotation . '</div>';
 		}
 	}
@@ -303,11 +320,14 @@ function BuildBook($server, $ssr, $BookID,  $url)
 function GetPublisher($ssr, $publisherId, $server)
 {
 	$getPublisherURL = $server . 'db?SSr=' . $ssr . '&guide=publishers&cmd=data&id=' . $publisherId . '&build_in_data=1&on_cdata=0';
-	// print_r($getPublisherURL );
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($ch, CURLOPT_URL, $getPublisherURL);
-	$PublisherXML = curl_exec($ch); /* Получаем сессию*/
+	/**
+	 * Получаем сессию
+	 * We get a session
+	 */
+	$PublisherXML = curl_exec($ch);
 	curl_close($ch);
 	$xml = simplexml_load_string($PublisherXML);
 	$json = json_encode($xml);
@@ -331,7 +351,11 @@ function GetBookIdbyDocId($server, $ssr, $BookID)
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($ch, CURLOPT_URL, $master_book_data_URL);
-	$RezXMLString = curl_exec($ch); /* Получаем данные книги по главе*/
+	/** 
+	 * Получаем данные книги по главе
+	 * We get the book data by chapter
+	*/
+	$RezXMLString = curl_exec($ch);
 	curl_close($ch);
 	$xml = simplexml_load_string($RezXMLString);
 	$result = $xml->xpath('/doc/book');
@@ -344,13 +368,19 @@ function GetBookIdbyDocId($server, $ssr, $BookID)
 
 function getSSr_O($serverapi, $org_id, $agr_id)
 {
-	/*  Получаем сессию организации*/
+	/**
+	 * Получаем сессию организации
+	 * We get the organization's session
+	 */
 	$getSesionURL = $serverapi . "join?org_id=" . $org_id . "&agr_id=" . $agr_id . "&app=plugin_moodle";
-	// print_r($getSesionURL );
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($ch, CURLOPT_URL, $getSesionURL);
-	$SSrXML = curl_exec($ch); /* Получаем сессию*/
+	/**
+	 * Получаем сессию
+	 * We get a session
+	 */
+	$SSrXML = curl_exec($ch);
 	curl_close($ch);
 	$xml = simplexml_load_string($SSrXML);
 	$json = json_encode($xml);
@@ -361,13 +391,19 @@ function getSSr_O($serverapi, $org_id, $agr_id)
 
 function getSSr_P($serverapi, $SSr_O, $USER_id, $USER_lastname, $USER_firstname)
 {
-	/*  Получаем сессию пользователя */
+	/**
+	 * Получаем сессию пользователя
+	 * Getting the user's session
+	 */
 	$getSesionURL = $serverapi . "db?SSr=" . $SSr_O . "&guide=session&cmd=solve&action=seamless_access&id=" . $USER_id . '&value.FamilyName.ru=' . $USER_lastname . '&value.NameAndFName.ru=' . $USER_firstname;
-	// print_r($getSesionURL );
 	$ch2 = curl_init();
 	curl_setopt($ch2, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($ch2, CURLOPT_URL, $getSesionURL);
-	$SSrXML = curl_exec($ch2); /* Получаем сессию*/
+	/**
+	 * Получаем сессию
+	 * We get a session
+	 */
+	$SSrXML = curl_exec($ch2);
 	curl_close($ch2);
 	$xml = simplexml_load_string($SSrXML);
 	$json = json_encode($xml);
@@ -378,9 +414,11 @@ function getSSr_P($serverapi, $SSr_O, $USER_id, $USER_lastname, $USER_firstname)
 
 function getKitsList($serverapi, $SSr_P)
 {
-	/*  Получаем комплект книг*/
+	/**
+	 * Получаем комплект книг
+	 * We get a set of books
+	 */
 	$kitsURL = $serverapi . "db?SSr=" . $SSr_P . "&guide=sengine&cmd=sel&tag=all_agreement_kits";
-	// print_r($kitsURL );
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($ch, CURLOPT_URL, $kitsURL);
@@ -400,7 +438,10 @@ function getKitsList($serverapi, $SSr_P)
 
 function BuildSwitchKit($server, $ssr, $kit_id, $url, $lang)
 {
-	/*  Получаем комплект книг*/
+	/**
+	 * Получаем комплект книг
+	 * We get a set of books
+	 */
 	$kitDataURL = $server . "db?SSr=" . $ssr . "&guide=sengine&cmd=sel&tag=kit_content&kit=" . $kit_id;
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -416,5 +457,5 @@ function BuildSwitchKit($server, $ssr, $kit_id, $url, $lang)
 	} else if ($xml->xpath('/document/name/string[@language="en"]')) {
 		$kitName = $xml->xpath('/document/name/string[@language="en"]');
 	}
-	return '<div class="titleH2"><p>Ссылка на комплект: <a target="_blank" href="' . $url . '">' . $kitName[0] . '</a></p></div>';
+	return '<div class="titleH2"><p>'.get_string('studentlibrary:link_to_the_kit', 'mod_studentlibrary').'<a target="_blank" href="' . $url . '">' . $kitName[0] . '</a></p></div>';
 }

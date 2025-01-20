@@ -29,11 +29,13 @@ require(__DIR__.'/../../config.php');
 global $DB, $USER, $CFG;
 
 if (isset($_GET['apikey'])){
-    /** Прверяю что ключ есть в базе */
+    /** 
+     * Проверяю что ключ есть в базе
+     * I'm checking that the key is in the database.
+     * */
     $apikey_exists = $DB->record_exists('studentlibrary_apikey', array('apikey' => $_GET['apikey']));
     if ($apikey_exists){
         $apikey_data = $DB->get_record('studentlibrary_apikey', array('apikey' => $_GET['apikey']), '*', MUST_EXIST);
-        // print_r($apikey_data);
         $result = new stdClass();
         $result->course=$apikey_data->course;
         $result->module=$apikey_data->module;
@@ -43,10 +45,8 @@ if (isset($_GET['apikey'])){
         $result->report=$_GET['report'];
         $result->modified=time();
         $lastinsertid = $DB->insert_record('studentlibrary_results', $result,false);
-
         $DB->delete_records('studentlibrary_apikey', array('apikey' => $_GET['apikey']), '*', MUST_EXIST);
         print_r('{"status":"ok"}');
-        // header('Location: view.php?id='+'$apikey_data->module');
         $urltogo= $CFG->wwwroot.'/mod/studentlibrary/view.php?id='.$apikey_data->module;
         redirect($urltogo);
     }else{

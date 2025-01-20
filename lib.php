@@ -58,10 +58,8 @@ function studentlibrary_supports($feature)
 function studentlibrary_add_instance($moduleinstance, $mform = null)
 {
     global $DB;
-
     $moduleinstance->timecreated = time();
     $id = $DB->insert_record('studentlibrary', $moduleinstance);
-
     return $id;
 }
 
@@ -78,10 +76,8 @@ function studentlibrary_add_instance($moduleinstance, $mform = null)
 function studentlibrary_update_instance($moduleinstance, $mform = null)
 {
     global $DB;
-
     $moduleinstance->timemodified = time();
     $moduleinstance->id = $moduleinstance->instance;
-
     return $DB->update_record('studentlibrary', $moduleinstance);
 }
 
@@ -94,14 +90,11 @@ function studentlibrary_update_instance($moduleinstance, $mform = null)
 function studentlibrary_delete_instance($id)
 {
     global $DB;
-
     $exists = $DB->get_record('studentlibrary', array('id' => $id));
     if (!$exists) {
         return false;
     }
-
     $DB->delete_records('studentlibrary', array('id' => $id));
-
     return true;
 }
 
@@ -118,7 +111,6 @@ function studentlibrary_delete_instance($id)
 function studentlibrary_scale_used($moduleinstanceid, $scaleid)
 {
     global $DB;
-
     if ($scaleid && $DB->record_exists('studentlibrary', array('id' => $moduleinstanceid, 'grade' => -$scaleid))) {
         return true;
     } else {
@@ -137,7 +129,6 @@ function studentlibrary_scale_used($moduleinstanceid, $scaleid)
 function studentlibrary_scale_used_anywhere($scaleid)
 {
     global $DB;
-
     if ($scaleid and $DB->record_exists('studentlibrary', array('grade' => -$scaleid))) {
         return true;
     } else {
@@ -158,25 +149,22 @@ function studentlibrary_grade_item_update($moduleinstance, $reset = false)
 {
     global $CFG;
     require_once($CFG->libdir . '/gradelib.php');
-
     $item = array();
     $item['itemname'] = clean_param($moduleinstance->name, PARAM_NOTAGS);
     $item['gradetype'] = GRADE_TYPE_VALUE;
-
     if ($moduleinstance->grade > 0) {
         $item['gradetype'] = GRADE_TYPE_VALUE;
         $item['grademax']  = $moduleinstance->grade;
         $item['grademin']  = 0;
     } else if ($moduleinstance->grade < 0) {
         $item['gradetype'] = GRADE_TYPE_SCALE;
-        $item['scaleid']   = -$moduleinstance->grade;
+        $item['scaleid']   = $moduleinstance->grade;
     } else {
         $item['gradetype'] = GRADE_TYPE_NONE;
     }
     if ($reset) {
         $item['reset'] = true;
     }
-
     grade_update('mod/studentlibrary', $moduleinstance->course, 'mod', 'studentlibrary', $moduleinstance->id, 0, null, $item);
 }
 
@@ -190,7 +178,6 @@ function studentlibrary_grade_item_delete($moduleinstance)
 {
     global $CFG;
     require_once($CFG->libdir . '/gradelib.php');
-
     return grade_update(
         'mod/studentlibrary',
         $moduleinstance->course,
@@ -216,7 +203,6 @@ function studentlibrary_update_grades($moduleinstance, $userid = 0)
 {
     global $CFG, $DB;
     require_once($CFG->libdir . '/gradelib.php');
-
     $grades = array();
     grade_update('mod/studentlibrary', $moduleinstance->course, 'mod', 'studentlibrary', $moduleinstance->id, 0, $grades);
 }
@@ -227,9 +213,9 @@ function studentlibrary_extend_settings_navigation($settingsnav,  $stnode)
     $course         = $DB->get_record('course', array('id' => $PAGE->cm->course), '*', MUST_EXIST);
     $context = context_course::instance($course->id);
     if (has_capability('moodle/course:update', $context, $USER->id)) {
-        $stnode->add('Ведомость ЭБС', '/mod/studentlibrary/get_grade.php?id=' . $PAGE->cm->id . '&rev=1');
+        $stnode->add(get_string('studentlibrary:vedomost_all', 'mod_studentlibrary'), '/mod/studentlibrary/get_grade.php?id=' . $PAGE->cm->id . '&rev=1');
     } else {
-        $stnode->add('Моя успеваемость в ЭБС', '/mod/studentlibrary/get_grade.php?id=' . $PAGE->cm->id);
+        $stnode->add(get_string('studentlibrary:vedomost_my', 'mod_studentlibrary'), '/mod/studentlibrary/get_grade.php?id=' . $PAGE->cm->id);
     }
 }
 
@@ -238,13 +224,8 @@ function studentlibrary_file()
     require_once(__DIR__ . '/../../config.php');
     global $DB, $USER, $CFG;
     require_once("$CFG->libdir/phpspreadsheet/vendor/autoload.php");
-
-
-
     $ff = $DB->get_record('config', array('name' => 'studentlibraryfile'))->value;
-
     $fs = get_file_storage();
-
     $fileinfo = array(
         'component' => 'core',
         'filearea' => 'ebslist',
@@ -264,13 +245,10 @@ function studentlibrary_file()
     );
 
     if ($file) {
-
         $fn = $CFG->dataroot . '/temp/' . $ff;
         unlink($fn);
         $file->copy_content_to($fn);
-
         if (file_exists($fn) && filesize($fn)) {
-
             switch (pathinfo($fn)['extension']) {
                 case "xls":
                     $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
@@ -288,7 +266,6 @@ function studentlibrary_file()
             $hr = $worksheet->getHighestRow();
             $highestColumn = $worksheet->getHighestColumn();
             $hi = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
-
             for ($col = 1; $col <= $hi; ++$col) {
                 $value = $worksheet->getCellByColumnAndRow($col, 1)->getValue();
                 switch ($value) {
@@ -302,7 +279,6 @@ function studentlibrary_file()
             }
             $DB->delete_records('studentlibrary_cat');
             $books = array();
-
             for ($row = 2; $row <= $hr; ++$row) {
                 $r = new stdClass();
                 if (strlen($worksheet->getCellByColumnAndRow($i0, $row)->getValue()) < 2 or strlen($worksheet->getCellByColumnAndRow($i1, $row)->getValue()) < 1) continue;
@@ -311,7 +287,6 @@ function studentlibrary_file()
 
                 $books[] = $r;
             }
-
             if (!empty($books)) $DB->insert_records('studentlibrary_cat', $books);
         }
     }
