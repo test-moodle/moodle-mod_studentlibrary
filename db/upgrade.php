@@ -22,18 +22,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 function xmldb_studentlibrary_upgrade($oldversion): bool {
-    global $CFG, $DB;
-
-    $dbman = $DB->get_manager(); // Loads ddl manager and xmldb classes.
-
-    // if ($oldversion < 2019031200) {
-        // Perform the upgrade from version 2019031200 to the next version.
-    // }
-
-    // if ($oldversion < 2019031201) {
-        // Perform the upgrade from version 2019031201 to the next version.
-    // }
-
-    // Everything has succeeded to here. Return true.
+    if ($oldversion < 2019031200) {
+        upgrade_plugin_savepoint(true, 2024020501, 'mod', 'studentlibrary');
+    }
     return true;
 }
