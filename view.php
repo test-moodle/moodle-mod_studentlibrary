@@ -56,10 +56,6 @@ $PAGE->set_context($modulecontext);
 $PAGE->requires->css('/mod/studentlibrary/css/style.css');
 echo $OUTPUT->header();
 $content=$moduleinstance->intro."<br>";
-// $content.='<a href="'.get_lib_url($moduleinstance->booke,$moduleinstance->ised).'" target="_blank" >Нажмите чтобы перейти в учебное пособие</a>';
 $content.=get_lib_url($moduleinstance->booke,$moduleinstance->ised);
-
-// print_r(get_lib_url($moduleinstance->booke,$moduleinstance->ised));
 echo $OUTPUT->box($content, "generalbox center clearfix");
-
 echo $OUTPUT->footer();

@@ -49,36 +49,24 @@ class mod_studentlibrary_mod_form extends moodleform_mod
         $serverapi = get_mod_config('serverapi');
         $org_id = $DB->get_record('config', array('name' => 'studentlibrary_idorg'))->value;
         $agr_id = $DB->get_record('config', array('name' => 'studentlibrary_norg'))->value;
-        // $id_u = $USER->username;
-        
-        // Сервет КС не нужен так как получаем готовую ссылку на книгу
-        // $server = $DB->get_record('config', array('name' => 'studentlibrary_server'))->value;
-        // // $wwwroot = $CFG->wwwroot;
-        // if (substr($server, -1) !== '/') {
-        //     $server = $server . '/';
-        // }
         if (substr($serverapi, -1) !== '/') {
             $serverapi = $serverapi . '/';
         }
-        
-        /*  Получаем сессию организации*/
+        /**
+         * Получаем сессию организации
+         * We get the organization's session
+         */
         $SSr_O = getSSr_O($serverapi, $org_id, $agr_id);
-        // print_r($SSr_O);
-        // print('<br>');
-        /*  Получаем сессию пользователя */
-        // print_r('SSr_P: ');
-        // print_r($SSr_P);
-        // print('<br>');
+        /**
+         * Получаем сессию пользователя
+         * Getting the user's session
+         */
         $SSr_P = getSSr_P($serverapi, $SSr_O, $USER->id, str_replace(' ', '_', $USER->lastname), str_replace(' ', '_', $USER->firstname));
-        // print_r($SSr_P);
-        // print('<br>');
-        /*  Получаем комплект книг*/
-        // print_r($array);
-        // print('<br>');
-        // die();
-        
+        /**
+         * Получаем комплект книг
+         * We get a set of books
+         */
         $kitsList = getKitsList($serverapi, $SSr_P);
-        
         $mform = $this->_form;
         $mform->addElement('header', 'general', get_string('general', 'form'));
         $mform->addElement('text', 'name', "Название", array('size' => '64'));
@@ -87,24 +75,14 @@ class mod_studentlibrary_mod_form extends moodleform_mod
         } else {
             $mform->setType('name', PARAM_CLEANHTML);
         }
-        
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
         $mform->addHelpButton('name', 'studentlibraryname', 'mod_studentlibrary');
-        
-        
         if ($CFG->branch >= 29) {
             $this->standard_intro_elements();
         } else {
             $this->add_intro_editor();
         }
-        // region AddBook
-        
-        // $mform->addElement('header', 'AddBook', get_string('studentlibrary:addbook', 'mod_studentlibrary'));
-        
-        
-        // $mform->hardFreeze('booke');
-        
         $PAGE->requires->css('/mod/studentlibrary/css/style.css');
         $lang = 'ru';
         if (!empty($SESSION->lang)) {
@@ -124,6 +102,7 @@ class mod_studentlibrary_mod_form extends moodleform_mod
             get_string('studentlibrary:find_material', 'mod_studentlibrary'),
             get_string('studentlibrary:add_material', 'mod_studentlibrary'),
             get_string('studentlibrary:search_bar', 'mod_studentlibrary'),
+            get_string('studentlibrary:link_to_the_kit', 'mod_studentlibrary'),
             $lang
         ]);
         $courseid = optional_param('course', 0, PARAM_INT);
@@ -161,7 +140,6 @@ class mod_studentlibrary_mod_form extends moodleform_mod
                     $mform->setType('booke', PARAM_CLEANHTML);
                 }
                 $mform->addElement('html', '<div><a target="_blank" href="https://www.studentlibrary.ru/ru/pages/plagin.html">' . get_string('studentlibrary:instruction', 'mod_studentlibrary') . '</a></div>');
-                // $this->standard_grading_coursemodule_elements();
                 $this->standard_coursemodule_elements();
                 $this->add_action_buttons();
             }

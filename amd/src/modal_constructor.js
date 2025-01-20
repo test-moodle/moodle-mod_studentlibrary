@@ -48,7 +48,6 @@ export default class ModalConstructor extends Modal {
         script.src = src;
         script.type = 'text/javascript';
         script.defer = true;
-
         container.appendChild(script);
     }
 
@@ -57,7 +56,6 @@ export default class ModalConstructor extends Modal {
         script.type = 'text/css';
         script.rel = 'stylesheet';
         script.href = href;
-
         document.head.appendChild(script);
     }
 }

@@ -57,53 +57,50 @@ $PAGE->requires->css('/mod/studentlibrary/css/style.css');
 $context = context_course::instance($course->id);
 echo $OUTPUT->header();
 if ($rev == 1 && has_capability('moodle/course:update', $context, $USER->id)) {
-    echo $OUTPUT->heading("Ведомость ЭБС");
-
-    // echo $OUTPUT->box($r, "generalbox center clearfix");
+    echo $OUTPUT->heading(get_string('studentlibrary:vedomost_all', 'mod_studentlibrary'));
     $userid = $USER->id;
-    // $courseid = $PAGE->course->id;
     $moduleid = required_param('id', PARAM_INT);
     $activity_modules = $DB->get_record('course_modules', array('id' => $moduleid));
-
     $studentlibrary_results = $DB->get_records('studentlibrary_results', array('course' => $activity_modules->course, 'module' => $moduleid));
     if (count($studentlibrary_results) > 0) {
         $r = '<div class="table_rez"><table class="table table-bordered table-sm" id="tbl">';
-        $r .= "<thead><th>Пользователь</th><th>Всего вопросов</th><th>Правильных ответов</th><th>Ссылка на отчет</th><th>Дата</th></thead><tbody>";
+        $r .= "<thead><th>".get_string('studentlibrary:t_user', 'mod_studentlibrary');
+        $r .= "</th><th>".get_string('studentlibrary:t_quests_all', 'mod_studentlibrary');
+        $r .= "</th><th>".get_string('studentlibrary:t_quests_true', 'mod_studentlibrary');
+        $r .= "</th><th>".get_string('studentlibrary:t_url', 'mod_studentlibrary');
+        $r .= "</th><th>".get_string('studentlibrary:t_date', 'mod_studentlibrary')."</th></thead><tbody>";
         foreach ($studentlibrary_results as $studentlibrary_result) {
             $user = $DB->get_record('user', array('id' => $studentlibrary_result->userid));
             $uu = '<td>' . $user->lastname . ' ' . $user->firstname . ' ' . $user->middlename . '</td>';
-
-            $r .= "<tr>$uu<td>" . $studentlibrary_result->total . '</td><td>' . $studentlibrary_result->score  . '</td><td><a target="_blank" href="' . $studentlibrary_result->report  . '">Отчет о прохождении</a></td><td>' . date("Y-m-d H:i:s", $studentlibrary_result->modified) . '</td>';
+            $r .= "<tr>$uu<td>" . $studentlibrary_result->total . '</td><td>' . $studentlibrary_result->score  . '</td><td><a target="_blank" href="' . $studentlibrary_result->report  . '">'.get_string('studentlibrary:t_progress_report', 'mod_studentlibrary').'</a></td><td>' . date("Y-m-d H:i:s", $studentlibrary_result->modified) . '</td>';
         }
         $r .= "</tbody></table></div>";
         echo ($r);
     } else {
-        echo "Нет данных на данного пользователя";
+        echo get_string('studentlibrary:not_data', 'mod_studentlibrary');
     }
 } else {
-    echo $OUTPUT->heading("Успеваемость в ЭБС");
-
-    // echo $OUTPUT->box($r, "generalbox center clearfix");
+    echo $OUTPUT->heading(get_string('studentlibrary:vedomost_my', 'mod_studentlibrary'));
     $userid = $USER->id;
-    // $courseid = $PAGE->course->id;
     $moduleid = required_param('id', PARAM_INT);
     $activity_modules = $DB->get_record('course_modules', array('id' => $moduleid));
-
     $studentlibrary_results = $DB->get_records('studentlibrary_results', array('course' => $activity_modules->course, 'module' => $moduleid, 'userid' => $userid));
     if (count($studentlibrary_results) > 0) {
         $r = '<div class="table_rez"><table class="table table-bordered table-sm" id="tbl">';
-        $r .= "<thead><th>Пользователь</th><th>Всего вопросов</th><th>Правильных ответов</th><th>Ссылка на отчет</th><th>Дата</th></thead><tbody>";
+        $r .= "<thead><th>".get_string('studentlibrary:t_user', 'mod_studentlibrary');
+        $r .= "</th><th>".get_string('studentlibrary:t_quests_all', 'mod_studentlibrary');
+        $r .= "</th><th>".get_string('studentlibrary:t_quests_true', 'mod_studentlibrary');
+        $r .= "</th><th>".get_string('studentlibrary:t_url', 'mod_studentlibrary');
+        $r .= "</th><th>".get_string('studentlibrary:t_date', 'mod_studentlibrary')."</th></thead><tbody>";
         foreach ($studentlibrary_results as $studentlibrary_result) {
             $user = $DB->get_record('user', array('id' => $studentlibrary_result->userid));
             $uu = '<td>' . $user->lastname . ' ' . $user->firstname . ' ' . $user->middlename . '</td>';
-
-            $r .= "<tr>$uu<td>" . $studentlibrary_result->total . '</td><td>' . $studentlibrary_result->score  . '</td><td><a target="_blank" href="' . $studentlibrary_result->report  . '">Отчет о прохождении</a></td><td>' . date("Y-m-d H:i:s", $studentlibrary_result->modified) . '</td>';
+            $r .= "<tr>$uu<td>" . $studentlibrary_result->total . '</td><td>' . $studentlibrary_result->score  . '</td><td><a target="_blank" href="' . $studentlibrary_result->report  . '">'.get_string('studentlibrary:t_progress_report', 'mod_studentlibrary').'</a></td><td>' . date("Y-m-d H:i:s", $studentlibrary_result->modified) . '</td>';
         }
         $r .= "</tbody></table></div>";
         echo ($r);
     } else {
-        echo "Нет данных на данного пользователя";
+        echo get_string('studentlibrary:not_data', 'mod_studentlibrary');
     }
 }
-
 echo $OUTPUT->footer();

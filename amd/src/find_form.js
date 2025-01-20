@@ -10,6 +10,7 @@ export const init = (
     , search_button
     , add_button
     , search_bar
+    , add_button_kit_string
     , lang
 ) => {
     $('#search_button').on("click", function () {
@@ -42,7 +43,6 @@ export const init = (
         let kitsSelect = Y.Node.create('<div><p>' + kits_select + '</p><select id="kits_select" class="kits_select custom-select"></select></div>');
         let kitsSelectOne = kitsSelect.one('#kits_select');
         const kitsURL = serverapi + "db?SSr=" + ssr + "&guide=sengine&cmd=sel&tag=all_agreement_kits";
-        // window.console.log(kitsURL);
         let kitsHttp = new XMLHttpRequest();
         kitsHttp.open("GET", kitsURL, false); // false for synchronous request
         kitsHttp.send(null);
@@ -54,8 +54,6 @@ export const init = (
             let option = document.createElement("option");
             option.value = kitsArray[i].getAttribute('id');
             let KitDataList = GetKitData(serverapi, ssr, kitsArray[i].getAttribute('id'));
-            // window.console.log(lang);
-            // window.console.log( kitsArray[i].getAttribute('id'));
             const divArray = KitDataList.getElementsByTagName('division');
             if (i == 0) {
                 for (let j = 0; j < divArray.length; j++) {
@@ -71,7 +69,7 @@ export const init = (
         }
         search_form_filter.appendChild(kitsSelect);
         search_form_filter.appendChild(divSelect);
-        let add_button_kit = 'Добавить ссылку на комплект';
+        let add_button_kit = add_button_kit_string;
         let addkit = Y.Node.create('<button class="btn btn-primary addbook" name="submitbutton_kit" id="id_submitbutton_lit">' + add_button_kit + '</button>');
         addkit.on('click', function () {
             const kits_select = document.getElementById('kits_select');
@@ -94,7 +92,6 @@ export const init = (
             let book_search_list = document.getElementById("book-search-list");
             book_search_list.innerHTML = '';
             const searchURL = serverapi + 'db?SSr=' + ssr + '&cmd=sel&guide=sengine&tag=kwords_search&paginate=' + pagination + '&div=' + div_select + '&kwords="' + search_input + '"';
-            // window.console.log(searchURL);
             let xmlHttp = new XMLHttpRequest();
             xmlHttp.open("GET", searchURL, false); // false for synchronous request
             xmlHttp.send(null);
@@ -140,7 +137,6 @@ export const init = (
         dialogRef.dialog.show();
     });
     $('#id_booke').on("change", function () {
-        // window.console.log('change');
         const ssr = this.getAttribute("ssr_o");
         const id_error_booke = document.getElementById("id_error_booke");
         id_error_booke.innerHTML = '';
@@ -221,9 +217,7 @@ const removeActive = () => {
     $(".card").removeClass("active");
 };
 const makeActive = (element) => {
-    // window.console.log(element);
     $("#" + element + "-card").addClass("active");
-    // document.getElementById(element).ch
 };
 
 const convertStringToXML = (xmlString) => {
@@ -235,7 +229,6 @@ const convertStringToXML = (xmlString) => {
 const GetKitData = (server, ssr, selectKit) => {
     const divURL = server + 'db?SSr=' + ssr + '&guide=sengine&cmd=sel&tag=kit_content&kit=' + selectKit;
     let xmlHttp = new XMLHttpRequest();
-    // window.console.log(divURL);
     xmlHttp.open("GET", divURL, false); // false for synchronous request
     xmlHttp.send(null);
     return (convertStringToXML(xmlHttp.responseText));
@@ -249,7 +242,6 @@ const GetDivFullName = (server, ssr, divID, page = 0, leng) => {
         divDataURL = divDataURL + '&paginate=1';
     }
     let xmlHttp = new XMLHttpRequest();
-    // window.console.log(leng);
     xmlHttp.open("GET", divDataURL, false); // false for synchronous request
     xmlHttp.send(null);
     const divData = convertStringToXML(xmlHttp.responseText);
@@ -286,7 +278,6 @@ const BuildBooksList = (server, ssr, xmlString, pagination, serverapi, book_tota
     if (bookList.length > 0) {
         for (let i = 0; i < bookList.length; i++) {
             let BookID = bookList[i].innerHTML;
-            // window.console.log(BookID);
             if (BookID.split('/')[0] === 'book') {
                 let Book = BuildBook(server, ssr, BookID);
                 book_search_list.appendChild(Book);
@@ -309,81 +300,72 @@ const BuildBooksList = (server, ssr, xmlString, pagination, serverapi, book_tota
 const BuildBook = (server, ssr, BookID) => {
     let GetBookDataURL = server + 'db?SSr=' + ssr + '&guide=' + BookID.split('/')[0] + '&cmd=data&id=' + BookID.split('/')[1] + '&img_src_form=b64';
     let xmlHttp = new XMLHttpRequest();
-    // window.console.log(GetBookDataURL);
     xmlHttp.open("GET", GetBookDataURL, false); // false for synchronous request
     xmlHttp.send(null);
     let BookData = convertStringToXML(xmlHttp.responseText);
     let meta = BookData.getElementsByTagName('meta')[0];
-    // Макет
+    // Layout
     const book_list_item = '<label class="radio-card"><input type="radio" name="radio-card-input" class="radio-card-input"/><div class="card-content-wrapper"><span class="check-icon"></span><div class="card-content"><img></img><div class="metadata"><div class="title"></div><div class="authors"></div><div class="doc_name"></div></div></div></div></label>';
     let div_book_list_item = document.createElement('div');
     div_book_list_item.innerHTML = book_list_item;
-    // ENDМакет
+    // END_Layout
     let radio_card = div_book_list_item.getElementsByClassName('radio-card')[0];
     radio_card.setAttribute('for', BookID.split('/')[1]);
     div_book_list_item.getElementsByClassName('radio-card-input')[0].setAttribute('id', BookID.split('/')[1]);
-    // Название
-    // window.console.log(BookData.getElementsByTagName('title')[0].getElementsByTagName('string'));
+    // Name
     if (BookData.getElementsByTagName('title')[0].getElementsByTagName('string').length > 0) {
         div_book_list_item.getElementsByClassName('title')[0].innerHTML = ReplaceCDATA(BookData.getElementsByTagName('title')[0].getElementsByTagName('string')[0].innerHTML);
     }
-    // Авторы
+    // Autor
     if (meta.querySelectorAll('[name="authors"]')[0].getElementsByTagName('string').length > 0) {
         div_book_list_item.getElementsByClassName('authors')[0].innerHTML = ReplaceCDATA(meta.querySelectorAll('[name="authors"]')[0].getElementsByTagName('string')[0].innerHTML);
     }
-    // Выбранная книга
+    // Select book
     div_book_list_item.getElementsByClassName('radio-card-input')[0].value = BookID;
     div_book_list_item.getElementsByClassName("radio-card")[0].onclick = function () {
         cardclick(BookID.split('/')[1]);
     };
-    // Аватар https://www.studentlibrary.ru/cache/book/ISBN5225046746/-1-avatar.jpg
-    // div_book_list_item.getElementsByTagName('img')[0].setAttribute('src', 'https://www.studentlibrary.ru/cache/book/' + BookID.split('/')[1] + '/-1-avatar.jpg');
     div_book_list_item.getElementsByTagName('img')[0].setAttribute('src', BookData.getElementById("avatar").getAttribute("src"));
     return div_book_list_item;
 };
 
 const BuildDoc = (server, ssr, BookID) => {
-    // window.console.log(BookID);
     let NewBookID = GetBookIdbyDocId(server, ssr, BookID);
     if (NewBookID !== null) {
-        // window.console.log(NewBookID);
         let GetBookDataURL = server + 'db?SSr=' + ssr + '&guide=book&cmd=data&id=' + NewBookID + '&img_src_form=b64';
         let xmlHttp = new XMLHttpRequest();
-        // window.console.log(GetBookDataURL);
         xmlHttp.open("GET", GetBookDataURL, false); // false for synchronous request
         xmlHttp.send(null);
         let BookData = convertStringToXML(xmlHttp.responseText);
-        // window.console.log(BookData.getElementsByTagName('meta'));
         if (BookData.getElementsByTagName('meta').length > 0) {
             let meta = BookData.getElementsByTagName('meta')[0];
-            // Макет
+            // Layout
             const book_list_item = '<label class="radio-card"><input type="radio" name="radio-card-input" class="radio-card-input"/><div class="card-content-wrapper"><span class="check-icon"></span><div class="card-content"><img></img><div class="metadata"><div class="doc_name"></div><div class="title"></div><div class="authors"></div></div></div></div></label>';
             let div_book_list_item = document.createElement('div');
             div_book_list_item.innerHTML = book_list_item;
-            // ENDМакет
+            // END_Layout
             let radio_card = div_book_list_item.getElementsByClassName('radio-card')[0];
             radio_card.setAttribute('for', BookID.split('/')[1] + '_' + BookID.split('/')[2]);
             div_book_list_item.getElementsByClassName('radio-card-input')[0].setAttribute('id', BookID.split('/')[1] + '_' + BookID.split('/')[2]);
-            // Название
+            // Name
             if (BookData.getElementsByTagName('title')[0].getElementsByTagName('string').length > 0) {
                 div_book_list_item.getElementsByClassName('title')[0].innerHTML = ReplaceCDATA(BookData.getElementsByTagName('title')[0].getElementsByTagName('string')[0].innerHTML);
             }
-            // Глава
+            // Chapter
             if (BookID.split('/')[2]) {
                 div_book_list_item.getElementsByClassName('doc_name')[0].innerHTML = ReplaceCDATA(BookData.getElementById(BookID.split('/')[1]).getElementsByTagName('string')[0].innerHTML) + ' стр. ' + BookID.split('/')[2];
             } else {
                 div_book_list_item.getElementsByClassName('doc_name')[0].innerHTML = ReplaceCDATA(BookData.getElementById(BookID.split('/')[1]).getElementsByTagName('string')[0].innerHTML);
             }
-            // Авторы
+            // Author
             if (meta.querySelectorAll('[name="authors"]')[0].getElementsByTagName('string').length > 0) {
                 div_book_list_item.getElementsByClassName('authors')[0].innerHTML = ReplaceCDATA(meta.querySelectorAll('[name="authors"]')[0].getElementsByTagName('string')[0].innerHTML);
             }
-            // Выбранная книга
+            // Select book
             div_book_list_item.getElementsByClassName('radio-card-input')[0].value = BookID;
             div_book_list_item.getElementsByClassName("radio-card")[0].onclick = function () {
                 cardclick(BookID.split('/')[1] + '_' + BookID.split('/')[2]);
             };
-            // Аватар https://www.studentlibrary.ru/cache/book/ISBN5225046746/-1-avatar.jpg
             div_book_list_item.getElementsByTagName('img')[0].setAttribute('src', BookData.getElementById("avatar").getAttribute("src"));
             return div_book_list_item;
         } else {
@@ -403,10 +385,8 @@ const ReplaceCDATA = (str) => {
 const PaginationClick = (ssr, res_id, page, pagination, serverapi, total) => {
     let book_search_list = document.getElementById("book-search-list");
     book_search_list.innerHTML = '';
-    // http://gate22d-m1c.studentlibrary.ru/db?SSr=07E8061B7A28&cmd=more&guide=sengine&res_id=0&from=11
     const searchURL = serverapi + 'db?SSr=' + ssr + '&cmd=more&guide=sengine&res_id=' + res_id + '&from=' + ((page - 1) * pagination);
     let xmlHttp = new XMLHttpRequest();
-    // window.console.log(searchURL);
     xmlHttp.open("GET", searchURL, false); // false for synchronous request
     xmlHttp.send(null);
     document.getElementById('book-pagination').setAttribute('page', page);
@@ -425,7 +405,7 @@ const BuildBookPagination = (res_id, ssr, pagination, total, page = 1, serverapi
     nav_bar_ul.classList.add('pagination');
     nav_bar_ul.setAttribute('data-page-size', 20);
     if (pageCount > 1) {
-        // кнопка назад
+        // the back button
         if (page > 1) {
             let previous_page = document.createElement('li');
             previous_page.classList.add('page-item');
@@ -438,7 +418,7 @@ const BuildBookPagination = (res_id, ssr, pagination, total, page = 1, serverapi
             previous_page.appendChild(previous_page_a);
             nav_bar_ul.appendChild(previous_page);
         }
-        // кнопка страница 1
+        // the page 1 button
         let first_page = document.createElement('li');
         first_page.classList.add('page-item');
         first_page.classList.add('page-item-book');
@@ -452,7 +432,7 @@ const BuildBookPagination = (res_id, ssr, pagination, total, page = 1, serverapi
         first_page_a.innerHTML = '<span aria-hidden="true">1</span>';
         first_page.appendChild(first_page_a);
         nav_bar_ul.appendChild(first_page);
-        // текушая ...
+        // the current one ...
         if (page > 3) {
             let previous_one_page_space = document.createElement('li');
             previous_one_page_space.classList.add('page-item');
@@ -464,7 +444,7 @@ const BuildBookPagination = (res_id, ssr, pagination, total, page = 1, serverapi
             previous_one_page_space.appendChild(previous_one_page_space_a);
             nav_bar_ul.appendChild(previous_one_page_space);
         }
-        // текушая страница - 1
+        // current page - 1
         if (page > 2) {
             let previous_one_page = document.createElement('li');
             previous_one_page.classList.add('page-item');
@@ -477,7 +457,7 @@ const BuildBookPagination = (res_id, ssr, pagination, total, page = 1, serverapi
             previous_one_page.appendChild(previous_one_page_a);
             nav_bar_ul.appendChild(previous_one_page);
         }
-        // текушая страница
+        // current page
         if (page > 1 && page < (Number(pageCount))) {
             let Current_one_page = document.createElement('li');
             Current_one_page.classList.add('page-item');
@@ -489,7 +469,7 @@ const BuildBookPagination = (res_id, ssr, pagination, total, page = 1, serverapi
             Current_one_page.appendChild(Current_one_page_a);
             nav_bar_ul.appendChild(Current_one_page);
         }
-        // текушая страница + 1
+        // current page + 1
         if (page < (Number(pageCount) - 1)) {
             let next_one_page = document.createElement('li');
             next_one_page.classList.add('page-item');
@@ -502,7 +482,7 @@ const BuildBookPagination = (res_id, ssr, pagination, total, page = 1, serverapi
             next_one_page.appendChild(next_one_page_a);
             nav_bar_ul.appendChild(next_one_page);
         }
-        // текушая ...
+        // current page ...
         if (page < (Number(pageCount) - 2)) {
             let next_one_page_space = document.createElement('li');
             next_one_page_space.classList.add('page-item');
@@ -514,7 +494,7 @@ const BuildBookPagination = (res_id, ssr, pagination, total, page = 1, serverapi
             next_one_page_space.appendChild(next_one_page_space_a);
             nav_bar_ul.appendChild(next_one_page_space);
         }
-        // кнопка страница last
+        // current page last
         let last_page = document.createElement('li');
         last_page.classList.add('page-item');
         last_page.classList.add('page-item-book');
@@ -528,7 +508,7 @@ const BuildBookPagination = (res_id, ssr, pagination, total, page = 1, serverapi
         last_page_a.innerHTML = '<span aria-hidden="true">' + pageCount + '</span>';
         last_page.appendChild(last_page_a);
         nav_bar_ul.appendChild(last_page);
-        // кнопка вперед
+        // button next
         if (page < pageCount) {
             let next_page = document.createElement('li');
             next_page.classList.add('page-item');
@@ -550,7 +530,6 @@ const BuildBookPagination = (res_id, ssr, pagination, total, page = 1, serverapi
 const GetBookIdbyDocId = (server, ssr, BookID) => {
     let master_book_data_URL = server + 'db?SSr=' + ssr + '&guide=doc&cmd=data&id=' + BookID.split('/')[1] + '&tag=master_book_data';
     let xmlHttp = new XMLHttpRequest();
-    // window.console.log(master_book_data_URL);
     xmlHttp.open("GET", master_book_data_URL, false); // false for synchronous request
     xmlHttp.send(null);
     let master_book_data = convertStringToXML(xmlHttp.responseText);
@@ -565,7 +544,6 @@ const GetBookIdbyDocId = (server, ssr, BookID) => {
 const GetBookData = (server, ssr, BookID) => {
     let GetBookDataURL = server + 'db?SSr=' + ssr + '&guide=' + BookID.split('/')[0] + '&cmd=data&id=' + BookID.split('/')[1] + '&img_src_form=b64';
     let xmlHttp = new XMLHttpRequest();
-    // window.console.log(GetBookDataURL);
     xmlHttp.open("GET", GetBookDataURL, false); // false for synchronous request
     xmlHttp.send(null);
     let BookData = convertStringToXML(xmlHttp.responseText);
