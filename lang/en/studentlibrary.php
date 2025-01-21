@@ -53,3 +53,6 @@ $string['studentlibrary:t_date'] = 'Date';
 $string['studentlibrary:t_progress_report'] = 'Progress Report';
 $string['studentlibrary:not_data'] = 'No data available';
 $string['studentlibrary:link_to_the_kit'] = 'Link to the kit: ';
+$string['studentlibrary:get_tree'] = 'Right for get tree catalog';
+$string['studentlibrary:get_constructor'] = 'Right to access the service Studentlibrary';
+$string['studentlibrary:addinstance'] = 'Right for get studentlibrary instance';

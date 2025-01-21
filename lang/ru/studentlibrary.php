@@ -53,3 +53,6 @@ $string['studentlibrary:t_date'] = 'Дата';
 $string['studentlibrary:t_progress_report'] = 'Отчет о прохождении';
 $string['studentlibrary:not_data'] = 'Нет данных';
 $string['studentlibrary:link_to_the_kit'] = 'Ссылка на комплект: ';
+$string['studentlibrary:get_tree'] = 'Право получать дерево каталога';
+$string['studentlibrary:get_constructor'] = 'Право получать доступ к сервису Консультант студента';
+$string['studentlibrary:addinstance'] = 'Право создавать инстансы модуля Консультант студента';
