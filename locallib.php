@@ -28,7 +28,6 @@ function get_lib_url($book)
 {
 	require_once(__DIR__ . '/../../config.php');
 	global $DB, $USER, $PAGE,  $SESSION;
-	$lang = 'ru';
 	if (!empty($SESSION->lang)) {
 		if ($SESSION->lang !== null) {
 			$lang = $SESSION->lang;
@@ -41,10 +40,6 @@ function get_lib_url($book)
 	$serverapi = get_mod_config('serverapi');
 	$org_id = $DB->get_record('config', array('name' => 'studentlibrary_idorg'))->value;
 	$agr_id = $DB->get_record('config', array('name' => 'studentlibrary_norg'))->value;
-	$server = $DB->get_record('config', array('name' => 'studentlibrary_server'))->value;
-	if (substr($server, -1) !== '/') {
-		$server = $server . '/';
-	}
 	if (substr($serverapi, -1) !== '/') {
 		$serverapi = $serverapi . '/';
 	}
