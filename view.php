@@ -23,39 +23,39 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require(__DIR__.'/../../config.php');
-require_once(__DIR__.'/lib.php');
-require_once(__DIR__.'/locallib.php');
+require(__DIR__ . '/../../config.php');
+require_once(__DIR__ . '/lib.php');
+require_once(__DIR__ . '/locallib.php');
 $id = optional_param('id', 0, PARAM_INT);
 $t  = optional_param('t', 0, PARAM_INT);
 $s  = optional_param('s', 0, PARAM_INT);
 if ($id) {
     $cm             = get_coursemodule_from_id('studentlibrary', $id, 0, false, MUST_EXIST);
-    $course         = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-    $moduleinstance = $DB->get_record('studentlibrary', array('id' => $cm->instance), '*', MUST_EXIST);
+    $course         = $DB->get_record('course', ['id' => $cm->course], '*', MUST_EXIST);
+    $moduleinstance = $DB->get_record('studentlibrary', ['id' => $cm->instance], '*', MUST_EXIST);
 } else if ($s) {
-    $moduleinstance = $DB->get_record('studentlibrary', array('id' => $s), '*', MUST_EXIST);
-    $course         = $DB->get_record('course', array('id' => $moduleinstance->course), '*', MUST_EXIST);
+    $moduleinstance = $DB->get_record('studentlibrary', ['id' => $s], '*', MUST_EXIST);
+    $course         = $DB->get_record('course', ['id' => $moduleinstance->course], '*', MUST_EXIST);
     $cm             = get_coursemodule_from_instance('studentlibrary', $moduleinstance->id, $course->id, false, MUST_EXIST);
 } else {
     throw new moodle_exception('missingidandcmid', 'mod_studentlibrary');
 }
 require_login($course, true, $cm);
 $modulecontext = context_module::instance($cm->id);
-$event = \mod_studentlibrary\event\course_module_viewed::create(array(
+$event = \mod_studentlibrary\event\course_module_viewed::create([
     'objectid' => $moduleinstance->id,
     'context' => $modulecontext,
-));
+]);
 $event->add_record_snapshot('course', $course);
 $event->add_record_snapshot('studentlibrary', $moduleinstance);
 $event->trigger();
-$PAGE->set_url('/mod/studentlibrary/view.php', array('id' => $cm->id));
+$PAGE->set_url('/mod/studentlibrary/view.php', ['id' => $cm->id]);
 $PAGE->set_title(format_string($moduleinstance->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
 $PAGE->requires->css('/mod/studentlibrary/css/style.css');
 echo $OUTPUT->header();
-$content = $moduleinstance->intro."<br>";
-$content .= get_lib_url($moduleinstance->booke,$moduleinstance->ised);
+$content = $moduleinstance->intro . "<br>";
+$content .= get_lib_url($moduleinstance->booke, $moduleinstance->ised);
 echo $OUTPUT->box($content, "generalbox center clearfix");
 echo $OUTPUT->footer();
