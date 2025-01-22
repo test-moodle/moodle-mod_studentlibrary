@@ -22,8 +22,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 function xmldb_studentlibrary_upgrade($oldversion): bool {
-    if ($oldversion < 2019031200) {
-        upgrade_plugin_savepoint(true, 2024020501, 'mod', 'studentlibrary');
+    if ($oldversion < 2025012201) {
+        upgrade_plugin_savepoint(true, 2025012201, 'mod', 'studentlibrary');
     }
     return true;
 }
