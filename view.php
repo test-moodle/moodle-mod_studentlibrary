@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -45,7 +44,7 @@ require_login($course, true, $cm);
 $modulecontext = context_module::instance($cm->id);
 $event = \mod_studentlibrary\event\course_module_viewed::create(array(
     'objectid' => $moduleinstance->id,
-    'context' => $modulecontext
+    'context' => $modulecontext,
 ));
 $event->add_record_snapshot('course', $course);
 $event->add_record_snapshot('studentlibrary', $moduleinstance);
@@ -56,7 +55,7 @@ $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
 $PAGE->requires->css('/mod/studentlibrary/css/style.css');
 echo $OUTPUT->header();
-$content=$moduleinstance->intro."<br>";
-$content.=get_lib_url($moduleinstance->booke,$moduleinstance->ised);
+$content = $moduleinstance->intro."<br>";
+$content .= get_lib_url($moduleinstance->booke,$moduleinstance->ised);
 echo $OUTPUT->box($content, "generalbox center clearfix");
 echo $OUTPUT->footer();
