@@ -29,12 +29,13 @@ require_once(__DIR__.'/lib.php');
 require_once(__DIR__.'/locallib.php');
 $id = optional_param('id', 0, PARAM_INT);
 $t  = optional_param('t', 0, PARAM_INT);
+$s  = optional_param('s', 0, PARAM_INT);
 if ($id) {
     $cm             = get_coursemodule_from_id('studentlibrary', $id, 0, false, MUST_EXIST);
     $course         = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
     $moduleinstance = $DB->get_record('studentlibrary', array('id' => $cm->instance), '*', MUST_EXIST);
-} else if ($t) {
-    $moduleinstance = $DB->get_record('studentlibrary', array('id' => $n), '*', MUST_EXIST);
+} else if ($s) {
+    $moduleinstance = $DB->get_record('studentlibrary', array('id' => $s), '*', MUST_EXIST);
     $course         = $DB->get_record('course', array('id' => $moduleinstance->course), '*', MUST_EXIST);
     $cm             = get_coursemodule_from_instance('studentlibrary', $moduleinstance->id, $course->id, false, MUST_EXIST);
 } else {

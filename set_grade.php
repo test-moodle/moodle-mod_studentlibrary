@@ -26,7 +26,7 @@
 
 // Получение данных
 require(__DIR__.'/../../config.php');
-global $DB, $USER, $CFG;
+global $DB, $CFG;
 
 if (isset($_GET['apikey'])){
     /** 
@@ -44,7 +44,6 @@ if (isset($_GET['apikey'])){
         $result->score=$_GET['score'];
         $result->report=$_GET['report'];
         $result->modified=time();
-        $lastinsertid = $DB->insert_record('studentlibrary_results', $result,false);
         $DB->delete_records('studentlibrary_apikey', array('apikey' => $_GET['apikey']), '*', MUST_EXIST);
         print_r('{"status":"ok"}');
         $urltogo= $CFG->wwwroot.'/mod/studentlibrary/view.php?id='.$apikey_data->module;

@@ -201,7 +201,7 @@ function studentlibrary_grade_item_delete($moduleinstance)
 
 function studentlibrary_update_grades($moduleinstance, $userid = 0)
 {
-    global $CFG, $DB;
+    global $CFG;
     require_once($CFG->libdir . '/gradelib.php');
     $grades = array();
     grade_update('mod/studentlibrary', $moduleinstance->course, 'mod', 'studentlibrary', $moduleinstance->id, 0, $grades);
@@ -209,7 +209,7 @@ function studentlibrary_update_grades($moduleinstance, $userid = 0)
 
 function studentlibrary_extend_settings_navigation($settingsnav,  $stnode)
 {
-    global $USER, $PAGE, $CFG, $DB, $OUTPUT;
+    global $USER, $PAGE, $DB;
     $course         = $DB->get_record('course', array('id' => $PAGE->cm->course), '*', MUST_EXIST);
     $context = context_course::instance($course->id);
     if (has_capability('moodle/course:update', $context, $USER->id)) {
@@ -222,7 +222,7 @@ function studentlibrary_extend_settings_navigation($settingsnav,  $stnode)
 function studentlibrary_file()
 {
     require_once(__DIR__ . '/../../config.php');
-    global $DB, $USER, $CFG;
+    global $DB, $CFG;
     require_once("$CFG->libdir/phpspreadsheet/vendor/autoload.php");
     $ff = $DB->get_record('config', array('name' => 'studentlibraryfile'))->value;
     $fs = get_file_storage();

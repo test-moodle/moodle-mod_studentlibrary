@@ -84,7 +84,6 @@ class mod_studentlibrary_mod_form extends moodleform_mod
             $this->add_intro_editor();
         }
         $PAGE->requires->css('/mod/studentlibrary/css/style.css');
-        $lang = 'ru';
         if (!empty($SESSION->lang)) {
             if($SESSION->lang !== null) {
                 $lang =$SESSION->lang;
