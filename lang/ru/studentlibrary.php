@@ -25,14 +25,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['pluginname'] = 'studentlibrary';
 $string['modulename'] = 'ЭБС КС';
+$string['pluginname'] = 'studentlibrary';
 $string['modulename_help'] = 'ЭБС STUDENTLIBRARY';
-$string['pluginadministration'] = 'НАСТРОЙКИ ЭБС STUDENTLIBRARY';
-
-$string['studentlibraryname'] = 'НАЗВАНИЕ ЭЛЕМЕНТА (КНИГИ) В КУРСЕ';
-
-// new
 $string['studentlibrary:studentlibraryhead'] = 'Конфигурация ЭБС';
 $string['studentlibrary:studentlibraryhead_desc'] = 'Задайте заданный ИД организации и метку договора';
 $string['studentlibrary:idorg'] = 'ИД Организации';
@@ -70,3 +65,5 @@ $string['studentlibrary:link_to_the_kit'] = 'Ссылка на комплект:
 $string['studentlibrary:get_tree'] = 'Право получать дерево каталога';
 $string['studentlibrary:get_constructor'] = 'Право получать доступ к сервису Консультант студента';
 $string['studentlibrary:addinstance'] = 'Право создавать инстансы модуля Консультант студента';
+$string['pluginadministration'] = 'НАСТРОЙКИ ЭБС STUDENTLIBRARY';
+$string['studentlibraryname'] = 'НАЗВАНИЕ ЭЛЕМЕНТА (КНИГИ) В КУРСЕ';

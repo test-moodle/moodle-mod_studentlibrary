@@ -25,14 +25,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['pluginname'] = 'studentlibrary';
 $string['modulename'] = 'studentlibrary';
+$string['pluginname'] = 'studentlibrary';
 $string['modulename_help'] = 'studentlibrary module';
-$string['pluginadministration'] = 'EBS SETTINGS STUDENTLIBRARY';
-
-$string['studentlibraryname'] = 'NAME OF ITEM (BOOK) IN THE COURSE';
-
-// new
 $string['studentlibrary:studentlibraryhead'] = 'ESS configuration';
 $string['studentlibrary:studentlibraryhead_desc'] = 'Specify the specified organization ID and contract label';
 $string['studentlibrary:idorg'] = 'Organization ID';
@@ -70,3 +65,5 @@ $string['studentlibrary:link_to_the_kit'] = 'Link to the kit: ';
 $string['studentlibrary:get_tree'] = 'Right for get tree catalog';
 $string['studentlibrary:get_constructor'] = 'Right to access the service Studentlibrary';
 $string['studentlibrary:addinstance'] = 'Right for get studentlibrary instance';
+$string['pluginadministration'] = 'EBS SETTINGS STUDENTLIBRARY';
+$string['studentlibraryname'] = 'NAME OF ITEM (BOOK) IN THE COURSE';
