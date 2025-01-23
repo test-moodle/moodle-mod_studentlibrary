@@ -18,34 +18,34 @@
  * Plugin administration pages are defined here.
  *
  * @package     mod_studentlibrary
- * @category    shekhovtcev
- * @copyright   2025 <plagin@geotar.ru>
+ * @category    admin
+ * @copyright   2025 shekhovtcev <plagin@geotar.ru>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-function xmldb_studentlibrary_uninstall(){
-	require_once(__DIR__.'/../../../config.php');
-	global $DB;
-	
-$ff=$DB->get_record('config', array('name' =>'studentlibraryfile'))->value;
-
-
-$fs = get_file_storage();
- 
-$fileinfo = array(
-    'component' => 'core',     
-    'filearea' => 'ebslist',    
-    'itemid' => 0,               
-    'contextid' => 1, 
-    'filepath' => '/',          
-    'filename' => $ff); 
- 
-$file = $fs->get_file($fileinfo['contextid'], $fileinfo['component'], $fileinfo['filearea'],
-                      $fileinfo['itemid'], $fileinfo['filepath'], $fileinfo['filename']);
-					  
-if ($file) {
-    $file->delete();
-}
-
-return true;
+function xmldb_studentlibrary_uninstall() {
+    require_once(__DIR__ . '/../../../config.php');
+    global $DB;
+    $ff = $DB->get_record('config', ['name' => 'studentlibraryfile'])->value;
+    $fs = get_file_storage();
+    $fileinfo = [
+        'component' => 'core',
+        'filearea' => 'ebslist',
+        'itemid' => 0,
+        'contextid' => 1,
+        'filepath' => '/',
+        'filename' => $ff,
+    ];
+    $file = $fs->get_file(
+        $fileinfo['contextid'],
+        $fileinfo['component'],
+        $fileinfo['filearea'],
+        $fileinfo['itemid'],
+        $fileinfo['filepath'],
+        $fileinfo['filename']
+    );
+    if ($file) {
+        $file->delete();
+    }
+    return true;
 }
