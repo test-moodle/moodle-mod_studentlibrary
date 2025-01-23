@@ -24,12 +24,10 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-require_once __DIR__ . '/lib.php';
+require_once (__DIR__ . '/lib.php');
 
 if ($ADMIN->fulltree) {
-
      require_once($CFG->dirroot . '/mod/studentlibrary/lib.php');
-     
      $settings->add(
           new admin_setting_heading(
                'studentlibraryhead',
