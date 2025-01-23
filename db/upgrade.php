@@ -15,11 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Upgrade steps for the plugintype_pluginname plugin.
+ * Plugin administration pages are defined here.
  *
- * @package   plugintype_pluginname
- * @copyright 2025 shekhovtcev <plagin@geotar.ru>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     mod_studentlibrary
+ * @category    admin
+ * @copyright   2025 shekhovtcev <plagin@geotar.ru>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 function xmldb_studentlibrary_upgrade($oldversion): bool {
     if ($oldversion < 2025012201) {
