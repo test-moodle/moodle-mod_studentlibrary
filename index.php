@@ -19,17 +19,17 @@
  *
  * @package     mod_studentlibrary
  * @category    admin
- * @copyright   2025 <plagin@geotar.ru>
+ * @copyright   2025 shekhovtcev <plagin@geotar.ru>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 require(__DIR__.'/../../config.php');
 require_once(__DIR__.'/lib.php');
 $id = required_param('id', PARAM_INT);
-$course = $DB->get_record('course', array('id' => $id), '*', MUST_EXIST);
+$course = $DB->get_record('course', ['id' => $id], '*', MUST_EXIST);
 require_course_login($course);
 $coursecontext = context_course::instance($course->id);
-$PAGE->set_url('/mod/studentlibrary/index.php', array('id' => $id));
+$PAGE->set_url('/mod/studentlibrary/index.php', ['id' => $id]);
 $PAGE->set_title(format_string($course->fullname));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($coursecontext);
@@ -38,35 +38,35 @@ $modulenameplural = get_string('modulename', 'mod_studentlibrary');
 echo $OUTPUT->heading($modulenameplural);
 $studentlibrarys = get_all_instances_in_course('studentlibrary', $course);
 if (empty($studentlibrarys)) {
-    notice(get_string('nonewmodules', 'mod_studentlibrary'), new moodle_url('/course/view.php', array('id' => $course->id)));
+    notice(get_string('nonewmodules', 'mod_studentlibrary'), new moodle_url('/course/view.php', ['id' => $course->id]));
 }
 $table = new html_table();
 $table->attributes['class'] = 'generaltable mod_index';
 if ($course->format == 'weeks') {
-    $table->head  = array(get_string('week'), get_string('name'));
-    $table->align = array('center', 'left');
+    $table->head  = [get_string('week'), get_string('name')];
+    $table->align = ['center', 'left'];
 } else if ($course->format == 'topics') {
-    $table->head  = array(get_string('topic'), get_string('name'));
-    $table->align = array('center', 'left', 'left', 'left');
+    $table->head  = [get_string('topic'), get_string('name')];
+    $table->align = ['center', 'left', 'left', 'left'];
 } else {
-    $table->head  = array(get_string('name'));
-    $table->align = array('left', 'left', 'left');
+    $table->head  = [get_string('name')];
+    $table->align = ['left', 'left', 'left'];
 }
 foreach ($studentlibrarys as $studentlibrary) {
     if (!$studentlibrary->visible) {
         $link = html_writer::link(
-            new moodle_url('/mod/studentlibrary/view.php', array('id' => $studentlibrary->coursemodule)),
+            new moodle_url('/mod/studentlibrary/view.php', ['id' => $studentlibrary->coursemodule]),
             format_string($studentlibrary->name, true),
-            array('class' => 'dimmed'));
+            ['class' => 'dimmed']);
     } else {
         $link = html_writer::link(
-            new moodle_url('/mod/studentlibrary/view.php', array('id' => $studentlibrary->coursemodule)),
+            new moodle_url('/mod/studentlibrary/view.php', ['id' => $studentlibrary->coursemodule]),
             format_string($studentlibrary->name, true));
     }
-    if ($course->format == 'weeks' or $course->format == 'topics') {
-        $table->data[] = array($studentlibrary->section, $link);
+    if ($course->format == 'weeks' || $course->format == 'topics') {
+        $table->data[] = [$studentlibrary->section, $link];
     } else {
-        $table->data[] = array($link);
+        $table->data[] = [$link];
     }
 }
 
