@@ -55,10 +55,10 @@ class mod_studentlibrary_mod_form extends moodleform_mod {
         $ssro = getssro($serverapi, $orgid, $agrid);
         // Getting the user's session. Получаем сессию пользователя.
         $ssrp = getssrp(
-            $serverapi, 
-            $ssro, 
-            $USER->id, 
-            str_replace(' ', '_', $USER->lastname), 
+            $serverapi,
+            $ssro,
+            $USER->id,
+            str_replace(' ', '_', $USER->lastname),
             str_replace(' ', '_', $USER->firstname)
         );
         // We get a set of books. Получаем набор книг.
@@ -118,25 +118,27 @@ class mod_studentlibrary_mod_form extends moodleform_mod {
                     'kitsList' => implode(",", $kitslist),
                     ]
                 );
-            }
-            $mform->addElement(
-                'text',
-                'booke',
-                get_string('studentlibrary:bookid', 'mod_studentlibrary'),
-                [
-                    'size' => '64',
-                    'ssr_o' => $ssro,
-                    'ssr_p' => $ssrp,
-                    ]
-                );
-                if (!empty($CFG->formatstringstriptags)) {
-                    $mform->setType('booke', PARAM_TEXT);
-                } else {
-                    $mform->setType('booke', PARAM_CLEANHTML);
-                }
-                $mform->addElement('html', '<div><a target="_blank" href="https://www.studentlibrary.ru/ru/pages/plagin.html">' . get_string('studentlibrary:instruction', 'mod_studentlibrary') . '</a></div>');
-                    $this->standard_coursemodule_elements();
-                    $this->add_action_buttons();
-                }
-            }
-            
+        }
+        $mform->addElement(
+            'text',
+            'booke',
+            get_string('studentlibrary:bookid', 'mod_studentlibrary'),
+            [
+                'size' => '64',
+                'ssr_o' => $ssro,
+                'ssr_p' => $ssrp,
+                ]
+        );
+        if (!empty($CFG->formatstringstriptags)) {
+            $mform->setType('booke', PARAM_TEXT);
+        } else {
+            $mform->setType('booke', PARAM_CLEANHTML);
+        }
+        $mform->addElement(
+            'html',
+            '<div><a target="_blank" href="https://www.studentlibrary.ru/ru/pages/plagin.html">' . get_string('studentlibrary:instruction', 'mod_studentlibrary') . '</a></div>'
+        );
+        $this->standard_coursemodule_elements();
+        $this->add_action_buttons();
+    }
+}

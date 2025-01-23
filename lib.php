@@ -209,17 +209,20 @@ function studentlibrary_extend_settings_navigation($settingsnav,  $stnode) {
     $context = context_course::instance($course->id);
     if (has_capability('moodle/course:update', $context, $USER->id)) {
         $stnode->add(
-            get_string('studentlibrary:vedomost_all', 'mod_studentlibrary'), 
+            get_string('studentlibrary:vedomost_all', 'mod_studentlibrary'),
             '/mod/studentlibrary/get_grade.php?id=' . $PAGE->cm->id . '&rev=1'
         );
     } else {
         $stnode->add(
-            get_string('studentlibrary:vedomost_my', 'mod_studentlibrary'), 
+            get_string('studentlibrary:vedomost_my', 'mod_studentlibrary'),
             '/mod/studentlibrary/get_grade.php?id=' . $PAGE->cm->id
         );
     }
 }
 
+/**
+ * Function studentlibrary_file
+ */
 function studentlibrary_file() {
     require_once(__DIR__ . '/../../config.php');
     global $DB, $CFG;
@@ -291,6 +294,13 @@ function studentlibrary_file() {
     }
     return;
 }
+
+/**
+ * Get mod config.
+ *
+ * @param string $name .
+ * @return string.
+ */
 
 function get_mod_config($name) {
     $plugin = new \stdClass();
