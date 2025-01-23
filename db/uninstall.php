@@ -23,6 +23,9 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+/**
+ * Custom code to be run on uninstalling the plugin.
+ */
 function xmldb_studentlibrary_uninstall() {
     require_once(__DIR__ . '/../../../config.php');
     global $DB;

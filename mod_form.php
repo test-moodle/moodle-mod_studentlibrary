@@ -15,13 +15,13 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin administration pages are defined here.
- *
- * @package     mod_studentlibrary
- * @category    admin
- * @copyright   2025 <plagin@geotar.ru>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+* Plugin administration pages are defined here.
+*
+* @package     mod_studentlibrary
+* @category    admin
+* @copyright   2025 <plagin@geotar.ru>
+* @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+*/
 
 use mod_forum\local\factories\vault;
 
@@ -31,16 +31,19 @@ require_once($CFG->dirroot . '/course/moodleform_mod.php');
 require_once(__DIR__ . '/lib.php');
 require_once(__DIR__ . '/locallib.php');
 /**
- * Module instance settings form.
- *
- * @package    mod_studentlibrary
- * @copyright  2020 itsup.biz
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+* Module instance settings form.
+*
+* @package    mod_studentlibrary
+* @copyright  2020 itsup.biz
+* @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+*/
 class mod_studentlibrary_mod_form extends moodleform_mod {
-    // Defines forms elements
-    public function definition()
-    {
+    /**
+    * Defines forms elements
+    *
+    * @return void
+    */
+    public function definition() {
         global $CFG, $DB, $PAGE, $USER, $SESSION;
         $serverapi = get_mod_config('serverapi');
         $orgid = $DB->get_record('config', ['name' => 'studentlibrary_idorg'])->value;
@@ -49,11 +52,11 @@ class mod_studentlibrary_mod_form extends moodleform_mod {
             $serverapi = $serverapi . '/';
         }
         // We get the organization's session. Получаем сессию организации.
-        $ssro = getSSr_O($serverapi, $orgid, $agrid);
+        $ssro = getssro($serverapi, $orgid, $agrid);
         // Getting the user's session. Получаем сессию пользователя.
-        $ssrp = getSSr_P($serverapi, $ssro, $USER->id, str_replace(' ', '_', $USER->lastname), str_replace(' ', '_', $USER->firstname));
+        $ssrp = getssrp($serverapi, $ssro, $USER->id, str_replace(' ', '_', $USER->lastname), str_replace(' ', '_', $USER->firstname));
         // We get a set of books. Получаем набор книг.
-        $kitsList = getKitsList($serverapi, $ssrp);
+        $kitslist = getkitslist($serverapi, $ssrp);
         $mform = $this->_form;
         $mform->addElement('header', 'general', get_string('general', 'form'));
         $mform->addElement('text', 'name', "Название", ['size' => '64']);
@@ -106,27 +109,28 @@ class mod_studentlibrary_mod_form extends moodleform_mod {
                     'data-service' => '',
                     'ssr_o' => $ssro,
                     'ssr_p' => $ssrp,
-                    'kitsList' => implode(",", $kitsList),
-                ]
-            );
-        }
-        $mform->addElement(
-            'text',
-            'booke',
-            get_string('studentlibrary:bookid', 'mod_studentlibrary'),
-            [
-                'size' => '64',
-                'ssr_o' => $ssro,
-                'ssr_p' => $ssrp,
-            ]
-        );
-        if (!empty($CFG->formatstringstriptags)) {
-            $mform->setType('booke', PARAM_TEXT);
-        } else {
-            $mform->setType('booke', PARAM_CLEANHTML);
-        }
-        $mform->addElement('html', '<div><a target="_blank" href="https://www.studentlibrary.ru/ru/pages/plagin.html">' . get_string('studentlibrary:instruction', 'mod_studentlibrary') . '</a></div>');
-        $this->standard_coursemodule_elements();
-        $this->add_action_buttons();
-    }
-}
+                    'kitsList' => implode(",", $kitslist),
+                    ]
+                );
+            }
+            $mform->addElement(
+                'text',
+                'booke',
+                get_string('studentlibrary:bookid', 'mod_studentlibrary'),
+                [
+                    'size' => '64',
+                    'ssr_o' => $ssro,
+                    'ssr_p' => $ssrp,
+                    ]
+                );
+                if (!empty($CFG->formatstringstriptags)) {
+                    $mform->setType('booke', PARAM_TEXT);
+                } else {
+                    $mform->setType('booke', PARAM_CLEANHTML);
+                }
+                $mform->addElement('html', '<div><a target="_blank" href="https://www.studentlibrary.ru/ru/pages/plagin.html">' . get_string('studentlibrary:instruction', 'mod_studentlibrary') . '</a></div>');
+                    $this->standard_coursemodule_elements();
+                    $this->add_action_buttons();
+                }
+            }
+            

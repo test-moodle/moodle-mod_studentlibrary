@@ -122,7 +122,7 @@ function studentlibrary_scale_used($moduleinstanceid, $scaleid) {
  */
 function studentlibrary_scale_used_anywhere($scaleid) {
     global $DB;
-    if ($scaleid and $DB->record_exists('studentlibrary', ['grade' => -$scaleid])) {
+    if ($scaleid && $DB->record_exists('studentlibrary', ['grade' => -$scaleid])) {
         return true;
     } else {
         return false;
@@ -189,17 +189,23 @@ function studentlibrary_grade_item_delete($moduleinstance) {
  * @param stdClass $moduleinstance Instance object with extra cmidnumber and modname property.
  * @param int $userid Update grade of specific user only, 0 means all participants.
  */
-
 function studentlibrary_update_grades($moduleinstance, $userid = 0) {
     global $CFG;
     require_once($CFG->libdir . '/gradelib.php');
     $grades = [];
     grade_update('mod/studentlibrary', $moduleinstance->course, 'mod', 'studentlibrary', $moduleinstance->id, 0, $grades);
 }
-
+/**
+ * Extend_settings_navigation.
+ *
+ * Needed by {@see studentlibrary_extend_settings_navigation()}.
+ *
+ * @param stdClass $settingsnav .
+ * @param int $stnode .
+ */
 function studentlibrary_extend_settings_navigation($settingsnav,  $stnode) {
     global $USER, $PAGE, $DB;
-    $course = $DB->get_record('course', array('id' => $PAGE->cm->course), '*', MUST_EXIST);
+    $course = $DB->get_record('course', ['id' => $PAGE->cm->course], '*', MUST_EXIST);
     $context = context_course::instance($course->id);
     if (has_capability('moodle/course:update', $context, $USER->id)) {
         $stnode->add(get_string('studentlibrary:vedomost_all', 'mod_studentlibrary'), '/mod/studentlibrary/get_grade.php?id=' . $PAGE->cm->id . '&rev=1');
@@ -252,8 +258,8 @@ function studentlibrary_file() {
             $worksheet = $spreadsheet->getActiveSheet();
 
             $hr = $worksheet->getHighestRow();
-            $highestColumn = $worksheet->getHighestColumn();
-            $hi = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
+            $highestcolumn = $worksheet->gethighestcolumn();
+            $hi = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestcolumn);
             for ($col = 1; $col <= $hi; ++$col) {
                 $value = $worksheet->getCellByColumnAndRow($col, 1)->getValue();
                 switch ($value) {
@@ -266,13 +272,12 @@ function studentlibrary_file() {
                 }
             }
             $DB->delete_records('studentlibrary_cat');
-            $books = array();
+            $books = [];
             for ($row = 2; $row <= $hr; ++$row) {
                 $r = new stdClass();
                 if (strlen($worksheet->getCellByColumnAndRow($i0, $row)->getValue()) < 2 or strlen($worksheet->getCellByColumnAndRow($i1, $row)->getValue()) < 1) continue;
                 $r->book = $worksheet->getCellByColumnAndRow($i0, $row)->getValue();
                 $r->title = mb_substr($worksheet->getCellByColumnAndRow($i1, $row)->getValue(), 0, 254);
-
                 $books[] = $r;
             }
             if (!empty($books)) $DB->insert_records('studentlibrary_cat', $books);
@@ -281,9 +286,8 @@ function studentlibrary_file() {
     return;
 }
 
-function get_mod_config($name)
-{
+function get_mod_config($name) {
     $plugin = new \stdClass();
-    require __DIR__ . '/version.php';
+    require(__DIR__ . '/version.php');
     return $plugin->$name;
 }

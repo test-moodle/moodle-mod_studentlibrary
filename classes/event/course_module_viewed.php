@@ -27,14 +27,28 @@ namespace mod_studentlibrary\event;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * The mod_lanebs course module viewed event class.
+ *
+ * @package    mod_lanebs
+ * @since      Moodle 3.7
+ * @copyright  2013 Mark Nelson <markn@moodle.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class course_module_viewed extends \core\event\course_module_viewed {
     // For more information about the Events API, please visit:
     // https://docs.moodle.org/dev/Event_2
+    /**
+     * Set basic properties for the event.
+     */
     protected function init() {
         $this->data['objecttable'] = 'studentlibrary';
         $this->data['crud'] = 'r';
         $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
     }
+    /**
+     * Set basic objectid mapping.
+     */
     public static function get_objectid_mapping() {
         return (['db' => 'studentlibrary', 'restore' => 'studentlibrary']);
     }

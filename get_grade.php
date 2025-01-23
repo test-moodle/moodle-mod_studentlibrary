@@ -59,15 +59,18 @@ if ($rev == 1 && has_capability('moodle/course:update', $context, $USER->id)) {
     $studentlibraryresults = $DB->get_records('studentlibrary_results', ['course' => $activitymodules->course, 'module' => $moduleid]);
     if (count($studentlibraryresults) > 0) {
         $r = '<div class="table_rez"><table class="table table-bordered table-sm" id="tbl">';
-        $r .= "<thead><th>".get_string('studentlibrary:t_user', 'mod_studentlibrary');
-        $r .= "</th><th>".get_string('studentlibrary:t_quests_all', 'mod_studentlibrary');
-        $r .= "</th><th>".get_string('studentlibrary:t_quests_true', 'mod_studentlibrary');
-        $r .= "</th><th>".get_string('studentlibrary:t_url', 'mod_studentlibrary');
-        $r .= "</th><th>".get_string('studentlibrary:t_date', 'mod_studentlibrary')."</th></thead><tbody>";
+        $r .= "<thead><th>" . get_string('studentlibrary:t_user', 'mod_studentlibrary');
+        $r .= "</th><th>" . get_string('studentlibrary:t_quests_all', 'mod_studentlibrary');
+        $r .= "</th><th>" . get_string('studentlibrary:t_quests_true', 'mod_studentlibrary');
+        $r .= "</th><th>" . get_string('studentlibrary:t_url', 'mod_studentlibrary');
+        $r .= "</th><th>" . get_string('studentlibrary:t_date', 'mod_studentlibrary') . "</th></thead><tbody>";
         foreach ($studentlibraryresults as $studentlibraryresult) {
-            $user = $DB->get_record('user', array('id' => $studentlibraryresult->userid));
+            $user = $DB->get_record('user', ['id' => $studentlibraryresult->userid]);
             $uu = '<td>' . $user->lastname . ' ' . $user->firstname . ' ' . $user->middlename . '</td>';
-            $r .= "<tr>$uu<td>" . $studentlibraryresult->total . '</td><td>' . $studentlibraryresult->score  . '</td><td><a target="_blank" href="' . $studentlibraryresult->report  . '">'.get_string('studentlibrary:t_progress_report', 'mod_studentlibrary').'</a></td><td>' . date("Y-m-d H:i:s", $studentlibraryresult->modified) . '</td>';
+            $r .= "<tr>$uu<td>" . $studentlibraryresult->total . '</td><td>';
+            $r .= $studentlibraryresult->score  . '</td><td><a target="_blank" href="';
+            $r .= $studentlibraryresult->report  . '">'. get_string('studentlibrary:t_progress_report', 'mod_studentlibrary');
+            $r .= '</a></td><td>' . date("Y-m-d H:i:s", $studentlibraryresult->modified) . '</td>';
         }
         $r .= "</tbody></table></div>";
         echo ($r);
@@ -78,8 +81,8 @@ if ($rev == 1 && has_capability('moodle/course:update', $context, $USER->id)) {
     echo $OUTPUT->heading(get_string('studentlibrary:vedomost_my', 'mod_studentlibrary'));
     $userid = $USER->id;
     $moduleid = required_param('id', PARAM_INT);
-    $activitymodules = $DB->get_record('course_modules', array('id' => $moduleid));
-    $studentlibraryresults = $DB->get_records('studentlibrary_results', array('course' => $activitymodules->course, 'module' => $moduleid, 'userid' => $userid));
+    $activitymodules = $DB->get_record('course_modules', ['id' => $moduleid]);
+    $studentlibraryresults = $DB->get_records('studentlibrary_results', ['course' => $activitymodules->course, 'module' => $moduleid, 'userid' => $userid]);
     if (count($studentlibraryresults) > 0) {
         $r = '<div class="table_rez"><table class="table table-bordered table-sm" id="tbl">';
         $r .= "<thead><th>".get_string('studentlibrary:t_user', 'mod_studentlibrary');
@@ -88,9 +91,11 @@ if ($rev == 1 && has_capability('moodle/course:update', $context, $USER->id)) {
         $r .= "</th><th>".get_string('studentlibrary:t_url', 'mod_studentlibrary');
         $r .= "</th><th>".get_string('studentlibrary:t_date', 'mod_studentlibrary')."</th></thead><tbody>";
         foreach ($studentlibraryresults as $studentlibraryresult) {
-            $user = $DB->get_record('user', array('id' => $studentlibraryresult->userid));
+            $user = $DB->get_record('user', ['id' => $studentlibraryresult->userid]);
             $uu = '<td>' . $user->lastname . ' ' . $user->firstname . ' ' . $user->middlename . '</td>';
-            $r .= "<tr>$uu<td>" . $studentlibraryresult->total . '</td><td>' . $studentlibraryresult->score  . '</td><td><a target="_blank" href="' . $studentlibraryresult->report  . '">'.get_string('studentlibrary:t_progress_report', 'mod_studentlibrary').'</a></td><td>' . date("Y-m-d H:i:s", $studentlibraryresult->modified) . '</td>';
+            $r .= "<tr>$uu<td>" . $studentlibraryresult->total . '</td><td>' . $studentlibraryresult->score;
+            $r .= '</td><td><a target="_blank" href="' . $studentlibraryresult->report  . '">' . get_string('studentlibrary:t_progress_report', 'mod_studentlibrary');
+            $r .= '</a></td><td>' . date("Y-m-d H:i:s", $studentlibraryresult->modified) . '</td>';
         }
         $r .= "</tbody></table></div>";
         echo ($r);

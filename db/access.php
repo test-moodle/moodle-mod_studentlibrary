@@ -32,7 +32,7 @@ $capabilities = [
         'contextlevel' => CONTEXT_COURSE,
         'archetypes'   => [
             'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
+            'manager' => CAP_ALLOW,
         ],
     ],
     'mod/studentlibrary:addinstance' => [
@@ -41,9 +41,9 @@ $capabilities = [
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => [
             'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
+            'manager' => CAP_ALLOW,
         ],
-        'clonepermissionsfrom' => 'moodle/course:manageactivities'
+        'clonepermissionsfrom' => 'moodle/course:manageactivities',
     ],
     'mod/studentlibrary:get_constructor' => [
         'riskbitmask' => RISK_SPAM | RISK_PERSONAL,
