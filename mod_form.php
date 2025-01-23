@@ -15,13 +15,13 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* Plugin administration pages are defined here.
-*
-* @package     mod_studentlibrary
-* @category    admin
-* @copyright   2025 <plagin@geotar.ru>
-* @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
-*/
+ * Plugin administration pages are defined here.
+ *
+ * @package     mod_studentlibrary
+ * @category    admin
+ * @copyright   2025 <plagin@geotar.ru>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 use mod_forum\local\factories\vault;
 
@@ -31,18 +31,18 @@ require_once($CFG->dirroot . '/course/moodleform_mod.php');
 require_once(__DIR__ . '/lib.php');
 require_once(__DIR__ . '/locallib.php');
 /**
-* Module instance settings form.
-*
-* @package    mod_studentlibrary
-* @copyright  2020 itsup.biz
-* @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
-*/
+ * Module instance settings form.
+ *
+ * @package    mod_studentlibrary
+ * @copyright  2020 itsup.biz
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class mod_studentlibrary_mod_form extends moodleform_mod {
     /**
-    * Defines forms elements
-    *
-    * @return void
-    */
+     * Defines forms elements
+     *
+     * @return void
+     */
     public function definition() {
         global $CFG, $DB, $PAGE, $USER, $SESSION;
         $serverapi = get_mod_config('serverapi');
@@ -54,7 +54,13 @@ class mod_studentlibrary_mod_form extends moodleform_mod {
         // We get the organization's session. Получаем сессию организации.
         $ssro = getssro($serverapi, $orgid, $agrid);
         // Getting the user's session. Получаем сессию пользователя.
-        $ssrp = getssrp($serverapi, $ssro, $USER->id, str_replace(' ', '_', $USER->lastname), str_replace(' ', '_', $USER->firstname));
+        $ssrp = getssrp(
+            $serverapi, 
+            $ssro, 
+            $USER->id, 
+            str_replace(' ', '_', $USER->lastname), 
+            str_replace(' ', '_', $USER->firstname)
+        );
         // We get a set of books. Получаем набор книг.
         $kitslist = getkitslist($serverapi, $ssrp);
         $mform = $this->_form;

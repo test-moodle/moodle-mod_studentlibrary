@@ -208,9 +208,15 @@ function studentlibrary_extend_settings_navigation($settingsnav,  $stnode) {
     $course = $DB->get_record('course', ['id' => $PAGE->cm->course], '*', MUST_EXIST);
     $context = context_course::instance($course->id);
     if (has_capability('moodle/course:update', $context, $USER->id)) {
-        $stnode->add(get_string('studentlibrary:vedomost_all', 'mod_studentlibrary'), '/mod/studentlibrary/get_grade.php?id=' . $PAGE->cm->id . '&rev=1');
+        $stnode->add(
+            get_string('studentlibrary:vedomost_all', 'mod_studentlibrary'), 
+            '/mod/studentlibrary/get_grade.php?id=' . $PAGE->cm->id . '&rev=1'
+        );
     } else {
-        $stnode->add(get_string('studentlibrary:vedomost_my', 'mod_studentlibrary'), '/mod/studentlibrary/get_grade.php?id=' . $PAGE->cm->id);
+        $stnode->add(
+            get_string('studentlibrary:vedomost_my', 'mod_studentlibrary'), 
+            '/mod/studentlibrary/get_grade.php?id=' . $PAGE->cm->id
+        );
     }
 }
 
@@ -275,7 +281,7 @@ function studentlibrary_file() {
             $books = [];
             for ($row = 2; $row <= $hr; ++$row) {
                 $r = new stdClass();
-                if (strlen($worksheet->getCellByColumnAndRow($i0, $row)->getValue()) < 2 or strlen($worksheet->getCellByColumnAndRow($i1, $row)->getValue()) < 1) continue;
+                if (strlen($worksheet->getCellByColumnAndRow($i0, $row)->getValue()) < 2 || strlen($worksheet->getCellByColumnAndRow($i1, $row)->getValue()) < 1) continue;
                 $r->book = $worksheet->getCellByColumnAndRow($i0, $row)->getValue();
                 $r->title = mb_substr($worksheet->getCellByColumnAndRow($i1, $row)->getValue(), 0, 254);
                 $books[] = $r;

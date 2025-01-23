@@ -54,7 +54,6 @@ function get_lib_url($book) {
     $scheme = $url->get_scheme();
     $host = $url->get_host();
     $port = $url->get_port();
-    
     if (strlen($port) > 0) {
         $urlapi = $scheme . '://' . $host . ':' . $port . '/mod/studentlibrary/set_grade.php';
     } else {
@@ -65,7 +64,7 @@ function get_lib_url($book) {
     $courseid = $PAGE->course->id;
     $moduleid = required_param('id', PARAM_INT);
     $timecreated = time();
-    $apikey =  hash('sha256', $orgid . $agrid . $userid . $courseid . $moduleid . $timecreated); /* 64 */
+    $apikey = hash('sha256', $orgid . $agrid . $userid . $courseid . $moduleid . $timecreated); /* 64 */
     $result = new stdClass();
     $result->course = $courseid;
     $result->module = $moduleid;
@@ -96,7 +95,8 @@ function get_lib_url($book) {
             "id" => $USER->id,
             "value.kit_id" => $bookid,
         ];
-        $getaccesurl = $getaccesurl . '?' . 'SSr=' . $ssro . '&guide=session&cmd=solve&action=seamless_access&id=' . $USER->id . '&value.kit_id=' . $bookid;
+        $getaccesurl = $getaccesurl . '?' . 'SSr=' . $ssro . '&guide=session&cmd=solve&action=seamless_access&id=';
+        $getaccesurl .= $USER->id . '&value.kit_id=' . $bookid;
         if ($getaccesurl != '') {
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -106,7 +106,7 @@ function get_lib_url($book) {
             curl_close($ch);
             $xml = simplexml_load_string($rezxml);
             $json = json_encode($xml);
-            $array = json_decode($json, TRUE);
+            $array = json_decode($json, true);
             $bookitem = buildswitchkit($serverapi, $ssro, $bookid, $array["url"], $lang);
         }
     } else {
@@ -154,7 +154,7 @@ function get_lib_url($book) {
             curl_close($ch);
             $xml = simplexml_load_string($ssrxml);
             $json = json_encode($xml);
-            $array = json_decode($json, TRUE);
+            $array = json_decode($json, true);
             $url = $array["url"];
             $DB->insert_record('studentlibrary_apikey', $result, false); /* записываем ключ */
         }
@@ -191,7 +191,7 @@ function buildbook($server, $ssr, $bookid,  $url) {
     curl_close($ch);
     $xml = simplexml_load_string($ssrxml, null, LIBXML_NOCDATA);
     $json = json_encode($xml);
-    $array = json_decode($json, TRUE);
+    $array = json_decode($json, true);
     $metavar = $array['meta']['var'];
     $chapters = $array['chapters']['chapter'];
     $authors = '';
@@ -249,36 +249,42 @@ function buildbook($server, $ssr, $bookid,  $url) {
     }
     $publisher = getpublisher($ssr, $publisher, $server);
     if (isset($array['meta']['attachments']['cash']['attach'][0])) {
-        $img_src = $array['meta']['attachments']['cash']['attach'][0]['@attributes']['src'];
+        $imgsrc = $array['meta']['attachments']['cash']['attach'][0]['@attributes']['src'];
     } else {
-        $img_src = $array['meta']['attachments']['cash']['attach']['@attributes']['src'];
+        $imgsrc = $array['meta']['attachments']['cash']['attach']['@attributes']['src'];
     }
     $booklistitem = '';
     $booklistitem .= '<label class="radio-card">';
     $booklistitem .= '<div class="card-content-detail-wrapper">';
     if ($xml->xpath('/book/title/string[@language="' . $SESSION->lang . '"]')) {
-        $booklistitem .= '<div class="titleH1">' . $xml->xpath('/book/title/string[@language="' . $SESSION->lang . '"]')[0] . '</div>';
+        $booklistitem .= '<div class="titleH1">';
+        $booklistitem .= $xml->xpath('/book/title/string[@language="' . $SESSION->lang . '"]')[0] . '</div>';
     } else if ($xml->xpath('/book/title/string[@language="ru"]')) {
         $booklistitem .= '<div class="titleH1">' . $xml->xpath('/book/title/string[@language="ru"]')[0] . '</div>';
     } else if ($xml->xpath('/book/title/string[@language="en"]')) {
         $booklistitem .= '<div class="titleH1">' . $xml->xpath('/book/title/string[@language="en"]')[0] . '</div>';
     }
-    
     $booklistitem .= '<div class="titleH2">' . $chaptername . '</div>';
     $booklistitem .= '<div class="card-props">';
     $booklistitem .= '<div class="cover">';
-    $booklistitem .= '<img src=' . $img_src . '></img>';
+    $booklistitem .= '<img src=' . $imgsrc . '></img>';
     $booklistitem .= '</div>';
     $booklistitem .= '<div class="props-list">';
     $booklistitem .= '<dl class="main-props">';
-    $booklistitem .= '<dt class="ng-star-inserted">' . get_string('studentlibrary:authors', 'mod_studentlibrary') . ':</dt><dd class="ng-star-inserted authors">' . $authors . '</dd>';
-    $booklistitem .= '<dt class="ng-star-inserted">' . get_string('studentlibrary:publisher', 'mod_studentlibrary') . ':</dt><dd class="ng-star-inserted publisher">' . $publisher . '</dd>';
-    $booklistitem .= '<dt class="ng-star-inserted">' . get_string('studentlibrary:year', 'mod_studentlibrary') . ':</dt><dd class="ng-star-inserted year">' . $year . '</dd>';
-    $booklistitem .= '<dt class="ng-star-inserted"><div class="read_button"><a href="' . $url . '" target="_blank" class="btn btn-primary" >' . get_string('studentlibrary:read', 'mod_studentlibrary') . '</a></div></dt><dd class="ng-star-inserted"></dd>';
+    $booklistitem .= '<dt class="ng-star-inserted">' . get_string('studentlibrary:authors', 'mod_studentlibrary');
+    $booklistitem .= ':</dt><dd class="ng-star-inserted authors">' . $authors . '</dd>';
+    $booklistitem .= '<dt class="ng-star-inserted">' . get_string('studentlibrary:publisher', 'mod_studentlibrary');
+    $booklistitem .= ':</dt><dd class="ng-star-inserted publisher">' . $publisher . '</dd>';
+    $booklistitem .= '<dt class="ng-star-inserted">' . get_string('studentlibrary:year', 'mod_studentlibrary');
+    $booklistitem .= ':</dt><dd class="ng-star-inserted year">' . $year . '</dd>';
+    $booklistitem .= '<dt class="ng-star-inserted"><div class="read_button"><a href="' . $url . '" target="_blank" class="btn btn-primary" >';
+    $booklistitem .= get_string('studentlibrary:read', 'mod_studentlibrary');
+    $booklistitem .= '</a></div></dt><dd class="ng-star-inserted"></dd>';
     $booklistitem .= '</dl>';
     $booklistitem .= '<div class="doc_name"></div>';
     $booklistitem .= '</div>';
-    $booklistitem .= '<div class="annotation"><p class="annotation_title">' . get_string('studentlibrary:annotation', 'mod_studentlibrary') . ':</p>';
+    $booklistitem .= '<div class="annotation"><p class="annotation_title">';
+    $booklistitem .= get_string('studentlibrary:annotation', 'mod_studentlibrary') . ':</p>';
     if ($annotation) {
         if (isset($annotation['p'])) {
             for ($p = 0; $p < count($annotation['p']); $p++) {
@@ -307,7 +313,7 @@ function getpublisher($ssr, $getpublisherurl, $server) {
     curl_close($ch);
     $xml = simplexml_load_string($publisherxml);
     $json = json_encode($xml);
-    $array = json_decode($json, TRUE);
+    $array = json_decode($json, true);
     $publishersfield = $array['field'];
     if ($publishersfield) {
         for ($i = 0; $i < count($publishersfield); $i++) {
@@ -349,14 +355,15 @@ function getssro($serverapi, $orgid, $agrid) {
     curl_close($ch);
     $xml = simplexml_load_string($ssrxml);
     $json = json_encode($xml);
-    $array = json_decode($json, TRUE);
+    $array = json_decode($json, true);
     $ssro = $array["code"];
     return $ssro;
 }
 
 function getssrp($serverapi, $ssro, $userid, $userlastname, $userfirstname) {
     // Getting the user's session. Получаем сессию пользователя.
-    $getsesionurl = $serverapi . "db?SSr=" . $ssro . "&guide=session&cmd=solve&action=seamless_access&id=" . $userid . '&value.FamilyName.ru=' . $userlastname . '&value.NameAndFName.ru=' . $userfirstname;
+    $getsesionurl = $serverapi . "db?SSr=" . $ssro . "&guide=session&cmd=solve&action=seamless_access&id=";
+    $getsesionurl .= $userid . '&value.FamilyName.ru=' . $userlastname . '&value.NameAndFName.ru=' . $userfirstname;
     $ch2 = curl_init();
     curl_setopt($ch2, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch2, CURLOPT_URL, $getsesionurl);
@@ -365,7 +372,7 @@ function getssrp($serverapi, $ssro, $userid, $userlastname, $userfirstname) {
     curl_close($ch2);
     $xml = simplexml_load_string($ssrxml);
     $json = json_encode($xml);
-    $array = json_decode($json, TRUE);
+    $array = json_decode($json, true);
     $ssrp = $array["code"];
     return $ssrp;
 }
@@ -380,7 +387,7 @@ function getkitslist($serverapi, $ssrp) {
     curl_close($ch);
     $xml = simplexml_load_string($kitslistxml);
     $json = json_encode($xml);
-    $array = json_decode($json, TRUE);
+    $array = json_decode($json, true);
     $allagreementkits = $array["all_agreement_kits"];
     $kitslist = [];
     foreach ($allagreementkits as $kits) {
@@ -407,5 +414,7 @@ function buildswitchkit($server, $ssr, $kit_id, $url, $lang) {
     } else if ($xml->xpath('/document/name/string[@language="en"]')) {
         $kitname = $xml->xpath('/document/name/string[@language="en"]');
     }
-    return '<div class="titleH2"><p>'. get_string('studentlibrary:link_to_the_kit', 'mod_studentlibrary') . '<a target="_blank" href="' . $url . '">' . $kitname[0] . '</a></p></div>';
+    $ret = '<div class="titleH2"><p>'. get_string('studentlibrary:link_to_the_kit', 'mod_studentlibrary');
+    $ret .= '<a target="_blank" href="' . $url . '">' . $kitname[0] . '</a></p></div>';
+    return $ret;
 }
