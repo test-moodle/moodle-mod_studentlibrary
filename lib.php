@@ -284,12 +284,16 @@ function studentlibrary_file() {
             $books = [];
             for ($row = 2; $row <= $hr; ++$row) {
                 $r = new stdClass();
-                if (strlen($worksheet->getCellByColumnAndRow($i0, $row)->getValue()) < 2 || strlen($worksheet->getCellByColumnAndRow($i1, $row)->getValue()) < 1) continue;
+                if (strlen($worksheet->getCellByColumnAndRow($i0, $row)->getValue()) < 2 || strlen($worksheet->getCellByColumnAndRow($i1, $row)->getValue()) < 1) {
+                    continue;
+                }
                 $r->book = $worksheet->getCellByColumnAndRow($i0, $row)->getValue();
                 $r->title = mb_substr($worksheet->getCellByColumnAndRow($i1, $row)->getValue(), 0, 254);
                 $books[] = $r;
             }
-            if (!empty($books)) $DB->insert_records('studentlibrary_cat', $books);
+            if (!empty($books)) {
+                $DB->insert_records('studentlibrary_cat', $books);
+            }
         }
     }
     return;
@@ -301,7 +305,6 @@ function studentlibrary_file() {
  * @param string $name .
  * @return string.
  */
-
 function get_mod_config($name) {
     $plugin = new \stdClass();
     require(__DIR__ . '/version.php');

@@ -180,7 +180,7 @@ function buildbook($server, $ssr, $bookid,  $url) {
         $bookid = explode("/", $bookid)[1];
         $getsesionurl = $server . 'db?SSr=' . $ssr . '&guide=book&cmd=data&id=' . $bookid . '&img_src_form=b64&on_cdata=1';
     } else if (explode("/", $bookid)[0] === 'doc') {
-        $bookid = getbookIdbydocId($server, $ssr, explode("/", $bookid)[1]);
+        $bookid = getbookidbydocid($server, $ssr, explode("/", $bookid)[1]);
         $getsesionurl = $server . 'db?SSr=' . $ssr . '&guide=book&cmd=data&id=' . $bookid . '&img_src_form=b64&on_cdata=1';
     }
     $ch = curl_init();
@@ -340,7 +340,7 @@ function getpublisher($ssr, $getpublisherurl, $server) {
  * @param string $server server url.
  * @return string Retutn publishers name.
  */
-function getbookIdbydocId($server, $ssr, $bookid) {
+function getbookidbydocid($server, $ssr, $bookid) {
     $masterbookdataurl = $server . 'db?SSr=' . $ssr . '&guide=doc&cmd=data&id=' . $bookid . '&tag=master_book_data';
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
