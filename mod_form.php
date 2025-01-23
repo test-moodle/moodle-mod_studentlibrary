@@ -46,8 +46,8 @@ class mod_studentlibrary_mod_form extends moodleform_mod
     {
         global $CFG, $DB, $PAGE, $USER, $SESSION;
         $serverapi = get_mod_config('serverapi');
-        $org_id = $DB->get_record('config', array('name' => 'studentlibrary_idorg'))->value;
-        $agr_id = $DB->get_record('config', array('name' => 'studentlibrary_norg'))->value;
+        $orgid = $DB->get_record('config', array('name' => 'studentlibrary_idorg'))->value;
+        $agrid = $DB->get_record('config', array('name' => 'studentlibrary_norg'))->value;
         if (substr($serverapi, -1) !== '/') {
             $serverapi = $serverapi . '/';
         }
@@ -55,17 +55,17 @@ class mod_studentlibrary_mod_form extends moodleform_mod
          * Получаем сессию организации
          * We get the organization's session
          */
-        $SSr_O = getSSr_O($serverapi, $org_id, $agr_id);
+        $ssro = getSSr_O($serverapi, $orgid, $agrid);
         /**
          * Получаем сессию пользователя
          * Getting the user's session
          */
-        $SSr_P = getSSr_P($serverapi, $SSr_O, $USER->id, str_replace(' ', '_', $USER->lastname), str_replace(' ', '_', $USER->firstname));
+        $ssrp = getSSr_P($serverapi, $ssro, $USER->id, str_replace(' ', '_', $USER->lastname), str_replace(' ', '_', $USER->firstname));
         /**
          * Получаем комплект книг
          * We get a set of books
          */
-        $kitsList = getKitsList($serverapi, $SSr_P);
+        $kitsList = getKitsList($serverapi, $ssrp);
         $mform = $this->_form;
         $mform->addElement('header', 'general', get_string('general', 'form'));
         $mform->addElement('text', 'name', "Название", array('size' => '64'));
@@ -116,8 +116,8 @@ class mod_studentlibrary_mod_form extends moodleform_mod
                     'data-token' => '',
                     'data-section' => $section,
                     'data-service' => '',
-                    'ssr_o' => $SSr_O,
-                    'ssr_p' => $SSr_P,
+                    'ssr_o' => $ssro,
+                    'ssr_p' => $ssrp,
                     'kitsList' => implode(",", $kitsList)
                     )
                 );
@@ -128,8 +128,8 @@ class mod_studentlibrary_mod_form extends moodleform_mod
                 get_string('studentlibrary:bookid', 'mod_studentlibrary'),
                 array(
                     'size' => '64',
-                    'ssr_o' => $SSr_O,
-                    'ssr_p' => $SSr_P,
+                    'ssr_o' => $ssro,
+                    'ssr_p' => $ssrp,
                     )
                 );
                 if (!empty($CFG->formatstringstriptags)) {
