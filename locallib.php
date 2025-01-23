@@ -436,14 +436,14 @@ function getkitslist($serverapi, $ssrp) {
  * Building a switch kit.
  * @param string $server server.
  * @param string $ssr ssr.
- * @param string $kit_id kit id.
+ * @param string $kitid kit id.
  * @param string $url url.
  * @param string $lang lang.
  * @return string Retutn switch kit.
  */
-function buildswitchkit($server, $ssr, $kit_id, $url, $lang) {
+function buildswitchkit($server, $ssr, $kitid, $url, $lang) {
     // We get a set of books. Получаем список книг.
-    $kitdataurl = $server . "db?SSr=" . $ssr . "&guide=sengine&cmd=sel&tag=kit_content&kit=" . $kit_id;
+    $kitdataurl = $server . "db?SSr=" . $ssr . "&guide=sengine&cmd=sel&tag=kit_content&kit=" . $kitid;
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_URL, $kitdataurl);
