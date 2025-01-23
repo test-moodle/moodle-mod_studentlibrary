@@ -15,42 +15,43 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin capabilities for the plugintype_pluginname plugin.
+ * Plugin administration pages are defined here.
  *
- * @package   plugintype_pluginname
- * @copyright shekhovtcev <plagin@geotar.ru>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     mod_studentlibrary
+ * @category    admin
+ * @copyright   2025 shekhovtcev <plagin@geotar.ru>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$capabilities = array(
-    'mod/studentlibrary:get_tree' => array(
+$capabilities = [
+    'mod/studentlibrary:get_tree' => [
         'riskbitmask'  => RISK_SPAM | RISK_PERSONAL,
         'captype'      => 'read',
         'contextlevel' => CONTEXT_COURSE,
-        'archetypes'   => array(
+        'archetypes'   => [
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
-        ),
-    ),
-    'mod/studentlibrary:addinstance' => array(
+        ],
+    ],
+    'mod/studentlibrary:addinstance' => [
         'riskbitmask' => RISK_SPAM | RISK_XSS,
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
-        'archetypes' => array(
+        'archetypes' => [
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
-        ),
+        ],
         'clonepermissionsfrom' => 'moodle/course:manageactivities'
-    ),
-    'mod/studentlibrary:get_constructor' => array(
+    ],
+    'mod/studentlibrary:get_constructor' => [
         'riskbitmask' => RISK_SPAM | RISK_PERSONAL,
         'captype' => 'read',
         'contextlevel' => CONTEXT_COURSE,
-        'archetypes' => array(
+        'archetypes' => [
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW,
-        ),
-    ),
-);
+        ],
+    ],
+];
