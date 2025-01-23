@@ -31,8 +31,7 @@ defined('MOODLE_INTERNAL') || die();
  * @param string $feature Constant representing the feature.
  * @return true | null True if the feature is supported, null otherwise.
  */
-function studentlibrary_supports($feature)
-{
+function studentlibrary_supports($feature) {
     switch ($feature) {
         case FEATURE_GRADE_HAS_GRADE:
             return true;
@@ -54,8 +53,7 @@ function studentlibrary_supports($feature)
  * @param mod_studentlibrary_mod_form $mform The form.
  * @return int The id of the newly inserted record.
  */
-function studentlibrary_add_instance($moduleinstance, $mform = null)
-{
+function studentlibrary_add_instance($moduleinstance, $mform = null) {
     global $DB;
     $moduleinstance->timecreated = time();
     $id = $DB->insert_record('studentlibrary', $moduleinstance);
@@ -72,8 +70,7 @@ function studentlibrary_add_instance($moduleinstance, $mform = null)
  * @param mod_studentlibrary_mod_form $mform The form.
  * @return bool True if successful, false otherwise.
  */
-function studentlibrary_update_instance($moduleinstance, $mform = null)
-{
+function studentlibrary_update_instance($moduleinstance, $mform = null) {
     global $DB;
     $moduleinstance->timemodified = time();
     $moduleinstance->id = $moduleinstance->instance;
@@ -86,14 +83,13 @@ function studentlibrary_update_instance($moduleinstance, $mform = null)
  * @param int $id Id of the module instance.
  * @return bool True if successful, false on failure.
  */
-function studentlibrary_delete_instance($id)
-{
+function studentlibrary_delete_instance($id) {
     global $DB;
-    $exists = $DB->get_record('studentlibrary', array('id' => $id));
+    $exists = $DB->get_record('studentlibrary', ['id' => $id]);
     if (!$exists) {
         return false;
     }
-    $DB->delete_records('studentlibrary', array('id' => $id));
+    $DB->delete_records('studentlibrary', ['id' => $id]);
     return true;
 }
 
@@ -107,10 +103,9 @@ function studentlibrary_delete_instance($id)
  * @param int $scaleid ID of the scale.
  * @return bool True if the scale is used by the given mod_studentlibrary instance.
  */
-function studentlibrary_scale_used($moduleinstanceid, $scaleid)
-{
+function studentlibrary_scale_used($moduleinstanceid, $scaleid) {
     global $DB;
-    if ($scaleid && $DB->record_exists('studentlibrary', array('id' => $moduleinstanceid, 'grade' => -$scaleid))) {
+    if ($scaleid && $DB->record_exists('studentlibrary', ['id' => $moduleinstanceid, 'grade' => -$scaleid])) {
         return true;
     } else {
         return false;
@@ -125,10 +120,9 @@ function studentlibrary_scale_used($moduleinstanceid, $scaleid)
  * @param int $scaleid ID of the scale.
  * @return bool True if the scale is used by any mod_studentlibrary instance.
  */
-function studentlibrary_scale_used_anywhere($scaleid)
-{
+function studentlibrary_scale_used_anywhere($scaleid) {
     global $DB;
-    if ($scaleid and $DB->record_exists('studentlibrary', array('grade' => -$scaleid))) {
+    if ($scaleid and $DB->record_exists('studentlibrary', ['grade' => -$scaleid])) {
         return true;
     } else {
         return false;
@@ -144,11 +138,10 @@ function studentlibrary_scale_used_anywhere($scaleid)
  * @param bool $reset Reset grades in the gradebook.
  * @return void.
  */
-function studentlibrary_grade_item_update($moduleinstance, $reset = false)
-{
+function studentlibrary_grade_item_update($moduleinstance, $reset = false) {
     global $CFG;
     require_once($CFG->libdir . '/gradelib.php');
-    $item = array();
+    $item = [];
     $item['itemname'] = clean_param($moduleinstance->name, PARAM_NOTAGS);
     $item['gradetype'] = GRADE_TYPE_VALUE;
     if ($moduleinstance->grade > 0) {
@@ -173,8 +166,7 @@ function studentlibrary_grade_item_update($moduleinstance, $reset = false)
  * @param stdClass $moduleinstance Instance object.
  * @return grade_item.
  */
-function studentlibrary_grade_item_delete($moduleinstance)
-{
+function studentlibrary_grade_item_delete($moduleinstance) {
     global $CFG;
     require_once($CFG->libdir . '/gradelib.php');
     return grade_update(
@@ -185,7 +177,7 @@ function studentlibrary_grade_item_delete($moduleinstance)
         $moduleinstance->id,
         0,
         null,
-        array('deleted' => 1)
+        ['deleted' => 1],
     );
 }
 
@@ -198,18 +190,16 @@ function studentlibrary_grade_item_delete($moduleinstance)
  * @param int $userid Update grade of specific user only, 0 means all participants.
  */
 
-function studentlibrary_update_grades($moduleinstance, $userid = 0)
-{
+function studentlibrary_update_grades($moduleinstance, $userid = 0) {
     global $CFG;
     require_once($CFG->libdir . '/gradelib.php');
-    $grades = array();
+    $grades = [];
     grade_update('mod/studentlibrary', $moduleinstance->course, 'mod', 'studentlibrary', $moduleinstance->id, 0, $grades);
 }
 
-function studentlibrary_extend_settings_navigation($settingsnav,  $stnode)
-{
+function studentlibrary_extend_settings_navigation($settingsnav,  $stnode) {
     global $USER, $PAGE, $DB;
-    $course         = $DB->get_record('course', array('id' => $PAGE->cm->course), '*', MUST_EXIST);
+    $course = $DB->get_record('course', array('id' => $PAGE->cm->course), '*', MUST_EXIST);
     $context = context_course::instance($course->id);
     if (has_capability('moodle/course:update', $context, $USER->id)) {
         $stnode->add(get_string('studentlibrary:vedomost_all', 'mod_studentlibrary'), '/mod/studentlibrary/get_grade.php?id=' . $PAGE->cm->id . '&rev=1');
@@ -218,21 +208,20 @@ function studentlibrary_extend_settings_navigation($settingsnav,  $stnode)
     }
 }
 
-function studentlibrary_file()
-{
+function studentlibrary_file() {
     require_once(__DIR__ . '/../../config.php');
     global $DB, $CFG;
     require_once("$CFG->libdir/phpspreadsheet/vendor/autoload.php");
-    $ff = $DB->get_record('config', array('name' => 'studentlibraryfile'))->value;
+    $ff = $DB->get_record('config', ['name' => 'studentlibraryfile'])->value;
     $fs = get_file_storage();
-    $fileinfo = array(
+    $fileinfo = [
         'component' => 'core',
         'filearea' => 'ebslist',
         'itemid' => 0,
         'contextid' => 1,
         'filepath' => '/',
-        'filename' => $ff
-    );
+        'filename' => $ff,
+    ];
 
     $file = $fs->get_file(
         $fileinfo['contextid'],
@@ -240,7 +229,7 @@ function studentlibrary_file()
         $fileinfo['filearea'],
         $fileinfo['itemid'],
         $fileinfo['filepath'],
-        $fileinfo['filename']
+        $fileinfo['filename'],
     );
 
     if ($file) {
