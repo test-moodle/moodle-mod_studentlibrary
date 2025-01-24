@@ -23,16 +23,14 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+ defined('MOODLE_INTERNAL') || die();
+ require(__DIR__ . '/../../config.php');
 /**
  * Return if the plugin supports $feature.
  *
  * @param string $feature Constant representing the feature.
  * @return true | null True if the feature is supported, null otherwise.
  */
-
- defined('MOODLE_INTERNAL') || die();
- require_once(__DIR__ . '/../../config.php');
-
 function studentlibrary_supports($feature) {
     switch ($feature) {
         case FEATURE_GRADE_HAS_GRADE:
