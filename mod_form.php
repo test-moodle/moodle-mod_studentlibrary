@@ -134,10 +134,9 @@ class mod_studentlibrary_mod_form extends moodleform_mod {
         } else {
             $mform->setType('booke', PARAM_CLEANHTML);
         }
-        $mform->addElement(
-            'html',
-            '<div><a target="_blank" href="https://www.studentlibrary.ru/ru/pages/plagin.html">' . get_string('studentlibrary:instruction', 'mod_studentlibrary') . '</a></div>'
-        );
+        $div = '<div><a target="_blank" href="https://www.studentlibrary.ru/ru/pages/plagin.html">';
+        $div .= get_string('studentlibrary:instruction', 'mod_studentlibrary') . '</a></div>';
+        $mform->addElement('html', $div);
         $this->standard_coursemodule_elements();
         $this->add_action_buttons();
     }

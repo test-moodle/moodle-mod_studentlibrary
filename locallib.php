@@ -22,7 +22,6 @@
  * @copyright   2025 <plagin@geotar.ru>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Viewing a book.
@@ -32,6 +31,9 @@ defined('MOODLE_INTERNAL') || die();
  */
 function get_lib_url($book) {
     require_once(__DIR__ . '/../../config.php');
+    $id = required_param('id', PARAM_INT);
+    $course = $DB->get_record('course', ['id' => $id], '*', MUST_EXIST);
+    require_course_login($course);
     global $DB, $USER, $PAGE,  $SESSION;
     if (!empty($SESSION->lang)) {
         if ($SESSION->lang !== null) {
@@ -277,7 +279,8 @@ function buildbook($server, $ssr, $bookid,  $url) {
     $booklistitem .= ':</dt><dd class="ng-star-inserted publisher">' . $publisher . '</dd>';
     $booklistitem .= '<dt class="ng-star-inserted">' . get_string('studentlibrary:year', 'mod_studentlibrary');
     $booklistitem .= ':</dt><dd class="ng-star-inserted year">' . $year . '</dd>';
-    $booklistitem .= '<dt class="ng-star-inserted"><div class="read_button"><a href="' . $url . '" target="_blank" class="btn btn-primary" >';
+    $booklistitem .= '<dt class="ng-star-inserted"><div class="read_button"><a href="';
+    $booklistitem .= $url . '" target="_blank" class="btn btn-primary" >';
     $booklistitem .= get_string('studentlibrary:read', 'mod_studentlibrary');
     $booklistitem .= '</a></div></dt><dd class="ng-star-inserted"></dd>';
     $booklistitem .= '</dl>';
@@ -311,7 +314,8 @@ function buildbook($server, $ssr, $bookid,  $url) {
  * @return string Retutn publishers name.
  */
 function getpublisher($ssr, $getpublisherurl, $server) {
-    $getpublisherurl = $server . 'db?SSr=' . $ssr . '&guide=publishers&cmd=data&id=' . $getpublisherurl . '&build_in_data=1&on_cdata=0';
+    $getpublisherurl = $server . 'db?SSr=' . $ssr . '&guide=publishers&cmd=data&id=';
+    $getpublisherurl .= $getpublisherurl . '&build_in_data=1&on_cdata=0';
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_URL, $getpublisherurl);

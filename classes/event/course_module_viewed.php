@@ -25,8 +25,6 @@
 
 namespace mod_studentlibrary\event;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * The mod_lanebs course module viewed event class.
  *
@@ -37,7 +35,7 @@ defined('MOODLE_INTERNAL') || die();
  */
 class course_module_viewed extends \core\event\course_module_viewed {
     // For more information about the Events API, please visit:
-    // https://docs.moodle.org/dev/Event_2
+    // https://docs.moodle.org/dev/Event_2 .
     /**
      * Set basic properties for the event.
      */

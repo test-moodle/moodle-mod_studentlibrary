@@ -23,8 +23,6 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Return if the plugin supports $feature.
  *
@@ -284,7 +282,10 @@ function studentlibrary_file() {
             $books = [];
             for ($row = 2; $row <= $hr; ++$row) {
                 $r = new stdClass();
-                if (strlen($worksheet->getCellByColumnAndRow($i0, $row)->getValue()) < 2 || strlen($worksheet->getCellByColumnAndRow($i1, $row)->getValue()) < 1) {
+                if (strlen($worksheet->getCellByColumnAndRow($i0, $row)->getValue()) < 2 
+                    || 
+                    strlen($worksheet->getCellByColumnAndRow($i1, $row)->getValue()) < 1
+                    ) {
                     continue;
                 }
                 $r->book = $worksheet->getCellByColumnAndRow($i0, $row)->getValue();
