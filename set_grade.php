@@ -26,27 +26,6 @@
 // Get data. Получение данных.
 require_once(__DIR__ . '/../../config.php');
 global $DB, $CFG;
-
-// Course_module ID, or.
-$id = optional_param('id', 0, PARAM_INT);
-
-// ... module instance id.
-$l = optional_param('l', 0, PARAM_INT);
-
-if ($id) {
-    $cm = get_coursemodule_from_id('lanebs', $id, 0, false, MUST_EXIST);
-    $course = $DB->get_record('course', ['id' => $cm->course], '*', MUST_EXIST);
-    $moduleinstance = $DB->get_record('lanebs', ['id' => $cm->instance], '*', MUST_EXIST);
-} else if ($l) {
-    $moduleinstance = $DB->get_record('lanebs', ['id' => $l], '*', MUST_EXIST);
-    $course = $DB->get_record('course', ['id' => $moduleinstance->course], '*', MUST_EXIST);
-    $cm = get_coursemodule_from_instance('lanebs', $moduleinstance->id, $course->id, false, MUST_EXIST);
-} else {
-    throw new moodle_exception('missingidandcmid', 'mod_lanebs');
-}
-
-require_login($course, true, $cm);
-
 if (isset($_GET['apikey'])) {
     // Checking that the key is in the database. Проверяю что ключ есть в базе.
     $apikeyexists = $DB->record_exists('studentlibrary_apikey', ['apikey' => $_GET['apikey']]);
@@ -60,8 +39,12 @@ if (isset($_GET['apikey'])) {
         $result->score = $_GET['score'];
         $result->report = $_GET['report'];
         $result->modified = time();
+        $lastinsertid = $DB->insert_record('studentlibrary_results', $result,false);
         $DB->delete_records('studentlibrary_apikey', ['apikey' => $_GET['apikey']], '*', MUST_EXIST);
         echo('{"status":"ok"}');
+        $cm = get_coursemodule_from_id('studentlibrary', $apikeydata->module, 0, false, MUST_EXIST);
+        $course = $DB->get_record('course', ['id' => $apikeydata->course], '*', MUST_EXIST);
+        require_login($course, true, $cm);
         $urltogo = $CFG->wwwroot . '/mod/studentlibrary/view.php?id=' . $apikeydata->module;
         redirect($urltogo);
     } else {

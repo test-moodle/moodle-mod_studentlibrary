@@ -30,10 +30,6 @@
  * @return string Retutn context book page.
  */
 function get_lib_url($book) {
-    require_once(__DIR__ . '/../../config.php');
-    $id = required_param('id', PARAM_INT);
-    $course = $DB->get_record('course', ['id' => $id], '*', MUST_EXIST);
-    require_course_login($course);
     global $DB, $USER, $PAGE,  $SESSION;
     if (!empty($SESSION->lang)) {
         if ($SESSION->lang !== null) {
@@ -174,7 +170,7 @@ function get_lib_url($book) {
  * @param string $url api url.
  * @return string Retutn context book card.
  */
-function buildbook($server, $ssr, $bookid,  $url) {
+function buildbook($server, $ssr, $bookid, $url) {
     global $CFG, $SESSION;
     require_once($CFG->dirroot . '/course/moodleform_mod.php');
     require_once(__DIR__ . '/lib.php');

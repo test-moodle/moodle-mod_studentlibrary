@@ -27,19 +27,9 @@ require(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/lib.php');
 require_once(__DIR__ . '/locallib.php');
 $id = optional_param('id', 0, PARAM_INT);
-$t  = optional_param('t', 0, PARAM_INT);
-$s  = optional_param('s', 0, PARAM_INT);
-if ($id) {
-    $cm             = get_coursemodule_from_id('studentlibrary', $id, 0, false, MUST_EXIST);
-    $course         = $DB->get_record('course', ['id' => $cm->course], '*', MUST_EXIST);
-    $moduleinstance = $DB->get_record('studentlibrary', ['id' => $cm->instance], '*', MUST_EXIST);
-} else if ($s) {
-    $moduleinstance = $DB->get_record('studentlibrary', ['id' => $s], '*', MUST_EXIST);
-    $course         = $DB->get_record('course', ['id' => $moduleinstance->course], '*', MUST_EXIST);
-    $cm             = get_coursemodule_from_instance('studentlibrary', $moduleinstance->id, $course->id, false, MUST_EXIST);
-} else {
-    throw new moodle_exception('missingidandcmid', 'mod_studentlibrary');
-}
+$cm             = get_coursemodule_from_id('studentlibrary', $id, 0, false, MUST_EXIST);
+$course         = $DB->get_record('course', ['id' => $cm->course], '*', MUST_EXIST);
+$moduleinstance = $DB->get_record('studentlibrary', ['id' => $cm->instance], '*', MUST_EXIST);
 require_login($course, true, $cm);
 $modulecontext = context_module::instance($cm->id);
 $event = \mod_studentlibrary\event\course_module_viewed::create([
