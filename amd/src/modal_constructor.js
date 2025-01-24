@@ -3,8 +3,8 @@ import Modal from 'core/modal';
 import CustomEvents from 'core/custom_interaction_events';
 
 export default class ModalConstructor extends Modal {
-    static TYPE = 'mod_lanebs/modal_constructor';
-    static TEMPLATE = 'mod_lanebs/modal_constructor';
+    static TYPE = 'mod_studentlibrary/modal_constructor';
+    static TEMPLATE = 'mod_studentlibrary/modal_constructor';
     static SELECTORS = {
         'SCRIPT_BUTTON': '#script_button',
         'APP_CONTAINER': 'div#app_container',

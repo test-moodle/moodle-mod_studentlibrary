@@ -26,9 +26,9 @@
 namespace mod_studentlibrary\event;
 
 /**
- * The mod_lanebs course module viewed event class.
+ * The mod_studentlibrary course module viewed event class.
  *
- * @package    mod_lanebs
+ * @package    mod_studentlibrary
  * @since      Moodle 3.7
  * @copyright  2013 Mark Nelson <markn@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
