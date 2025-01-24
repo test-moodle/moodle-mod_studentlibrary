@@ -23,8 +23,6 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
- defined('MOODLE_INTERNAL') || die();
- require(__DIR__ . '/../../config.php');
 /**
  * Return if the plugin supports $feature.
  *
@@ -218,88 +216,6 @@ function studentlibrary_extend_settings_navigation($settingsnav,  $stnode) {
             '/mod/studentlibrary/get_grade.php?id=' . $PAGE->cm->id
         );
     }
-}
-
-/**
- * Function studentlibrary_file
- */
-function studentlibrary_file() {
-    require_once(__DIR__ . '/../../config.php');
-    global $DB, $CFG;
-    require_once("$CFG->libdir/phpspreadsheet/vendor/autoload.php");
-    $ff = $DB->get_record('config', ['name' => 'studentlibraryfile'])->value;
-    $fs = get_file_storage();
-    $fileinfo = [
-        'component' => 'core',
-        'filearea' => 'ebslist',
-        'itemid' => 0,
-        'contextid' => 1,
-        'filepath' => '/',
-        'filename' => $ff,
-    ];
-
-    $file = $fs->get_file(
-        $fileinfo['contextid'],
-        $fileinfo['component'],
-        $fileinfo['filearea'],
-        $fileinfo['itemid'],
-        $fileinfo['filepath'],
-        $fileinfo['filename'],
-    );
-
-    if ($file) {
-        $fn = $CFG->dataroot . '/temp/' . $ff;
-        unlink($fn);
-        $file->copy_content_to($fn);
-        if (file_exists($fn) && filesize($fn)) {
-            switch (pathinfo($fn)['extension']) {
-                case "xls":
-                    $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
-                    break;
-                case "xlsx":
-                    $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
-                    break;
-                default:
-                    return;
-                    break;
-            }
-            $spreadsheet = $reader->load($fn);
-            $worksheet = $spreadsheet->getActiveSheet();
-
-            $hr = $worksheet->getHighestRow();
-            $highestcolumn = $worksheet->gethighestcolumn();
-            $hi = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestcolumn);
-            for ($col = 1; $col <= $hi; ++$col) {
-                $value = $worksheet->getCellByColumnAndRow($col, 1)->getValue();
-                switch ($value) {
-                    case "book":
-                        $i0 = $col;
-                        break;
-                    case "title":
-                        $i1 = $col;
-                        break;
-                }
-            }
-            $DB->delete_records('studentlibrary_cat');
-            $books = [];
-            for ($row = 2; $row <= $hr; ++$row) {
-                $r = new stdClass();
-                if (strlen($worksheet->getCellByColumnAndRow($i0, $row)->getValue()) < 2
-                    ||
-                    strlen($worksheet->getCellByColumnAndRow($i1, $row)->getValue()) < 1
-                    ) {
-                    continue;
-                }
-                $r->book = $worksheet->getCellByColumnAndRow($i0, $row)->getValue();
-                $r->title = mb_substr($worksheet->getCellByColumnAndRow($i1, $row)->getValue(), 0, 254);
-                $books[] = $r;
-            }
-            if (!empty($books)) {
-                $DB->insert_records('studentlibrary_cat', $books);
-            }
-        }
-    }
-    return;
 }
 
 /**

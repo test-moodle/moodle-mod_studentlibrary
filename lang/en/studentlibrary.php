@@ -27,8 +27,8 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['modulename'] = 'studentlibrary';
 $string['modulename_help'] = 'studentlibrary module';
-$string['pluginname'] = 'studentlibrary';
 $string['pluginadministration'] = 'EBS SETTINGS STUDENTLIBRARY';
+$string['pluginname'] = 'studentlibrary';
 $string['studentlibrary:add_material'] = 'Add material';
 $string['studentlibrary:addbook'] = 'Add book';
 $string['studentlibrary:addinstance'] = 'Right for get studentlibrary instance';

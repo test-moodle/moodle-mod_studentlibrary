@@ -27,8 +27,8 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['modulename'] = 'ЭБС КС';
 $string['modulename_help'] = 'ЭБС STUDENTLIBRARY';
-$string['pluginname'] = 'studentlibrary';
 $string['pluginadministration'] = 'НАСТРОЙКИ ЭБС STUDENTLIBRARY';
+$string['pluginname'] = 'studentlibrary';
 $string['studentlibrary:add_material'] = 'Добавить материал';
 $string['studentlibrary:addbook'] = 'Добавить книгу';
 $string['studentlibrary:addinstance'] = 'Право создавать инстансы модуля Консультант студента';
