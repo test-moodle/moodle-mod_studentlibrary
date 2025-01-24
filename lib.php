@@ -29,6 +29,10 @@
  * @param string $feature Constant representing the feature.
  * @return true | null True if the feature is supported, null otherwise.
  */
+
+ defined('MOODLE_INTERNAL') || die();
+ require_once(__DIR__ . '/../../config.php');
+
 function studentlibrary_supports($feature) {
     switch ($feature) {
         case FEATURE_GRADE_HAS_GRADE:
@@ -282,8 +286,8 @@ function studentlibrary_file() {
             $books = [];
             for ($row = 2; $row <= $hr; ++$row) {
                 $r = new stdClass();
-                if (strlen($worksheet->getCellByColumnAndRow($i0, $row)->getValue()) < 2 
-                    || 
+                if (strlen($worksheet->getCellByColumnAndRow($i0, $row)->getValue()) < 2
+                    ||
                     strlen($worksheet->getCellByColumnAndRow($i1, $row)->getValue()) < 1
                     ) {
                     continue;
