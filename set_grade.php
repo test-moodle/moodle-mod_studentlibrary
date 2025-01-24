@@ -39,7 +39,7 @@ if (isset($_GET['apikey'])) {
         $result->score = $_GET['score'];
         $result->report = $_GET['report'];
         $result->modified = time();
-        $lastinsertid = $DB->insert_record('studentlibrary_results', $result,false);
+        $lastinsertid = $DB->insert_record('studentlibrary_results', $result, false);
         $DB->delete_records('studentlibrary_apikey', ['apikey' => $_GET['apikey']], '*', MUST_EXIST);
         echo('{"status":"ok"}');
         $cm = get_coursemodule_from_id('studentlibrary', $apikeydata->module, 0, false, MUST_EXIST);
